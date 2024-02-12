@@ -9,7 +9,7 @@ VALUES ('John', 'Doe', 'john.doe@example.com', '1234 Main St', '123-456-7890', '
 INSERT INTO exam_task (exam_task_title)
 VALUES ('Final Exam'), ('Arrays'), ('Cycles');
 
-INSERT INTO exam (exam_score, exam_start_time, exam_end_time, exam_duration, exam_status, user_id, applicant_id, examtask_id)
-VALUES (80, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 70, 'PLANNED', 1, 1, 1),
-       (85, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 90, 'PLANNED', 2, 2, 2);
+INSERT INTO exam (id, exam_score, exam_start_time, exam_end_time, exam_duration, exam_status, user_id, applicant_id, examtask_id)
+VALUES (1, 80, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 70, 'PLANNED', 1, 1, 1),
+       (2, 85, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 90, 'PLANNED', 2, 2, 2);
 
