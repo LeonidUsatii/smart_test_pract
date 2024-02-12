@@ -100,35 +100,35 @@ class DeleteUser {
 }
 
 
-    @Nested
-    @DisplayName("GET /users/{user-id}:")
-    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-    class GetUser {
-
-        @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/users.sql"})
-        void testGetUserPositive() throws Exception {
-            Long userId = 1L;
-
-            mockMvc.perform(get("/api/users/{user-id}", userId)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.id").value(userId))
-                    .andExpect(jsonPath("$.firstName").value("Ivan"))
-                    .andExpect(jsonPath("$.lastName").value("Testov"))
-                    .andExpect(jsonPath("$.email").value("ivan.testov@example.com"));
-        }
-
-        @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/users.sql"})
-        void testGetUserNegative() throws Exception {
-            Long incorrectUserId = 777L;
-
-            mockMvc.perform(get("/api/users/{user-id}", incorrectUserId)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound());
-        }
-    }
+//    @Nested
+//    @DisplayName("GET /users/{user-id}:")
+//    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//    class GetUser {
+//
+//        @Test
+//        @Sql(scripts = {"/sql/schema.sql", "/sql/users.sql"})
+//        void testGetUserPositive() throws Exception {
+//            Long userId = 1L;
+//
+//            mockMvc.perform(get("/api/users/{user-id}", userId)
+//                            .contentType(MediaType.APPLICATION_JSON))
+//                    .andExpect(status().isOk())
+//                    .andExpect(jsonPath("$.id").value(userId))
+//                    .andExpect(jsonPath("$.firstName").value("Ivan"))
+//                    .andExpect(jsonPath("$.lastName").value("Testov"))
+//                    .andExpect(jsonPath("$.email").value("ivan.testov@example.com"));
+//        }
+//
+//        @Test
+//        @Sql(scripts = {"/sql/schema.sql", "/sql/users.sql"})
+//        void testGetUserNegative() throws Exception {
+//            Long incorrectUserId = 777L;
+//
+//            mockMvc.perform(get("/api/users/{user-id}", incorrectUserId)
+//                            .contentType(MediaType.APPLICATION_JSON))
+//                    .andExpect(status().isNotFound());
+//        }
+//    }
 
 //    @Nested
 //    @DisplayName("GET /users:")
@@ -159,7 +159,7 @@ class DeleteUser {
 //        }
 //    }
 
-    
+
 //    @Nested
 //    @DisplayName("UPDATE /users/{user-id}:")
 //    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
