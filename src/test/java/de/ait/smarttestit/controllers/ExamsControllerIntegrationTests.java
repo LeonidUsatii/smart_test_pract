@@ -37,7 +37,7 @@ public class ExamsControllerIntegrationTests {
     class PostExam {
 
         @Test
-        //@Sql(scripts = {"/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void testAddExamPositive() throws Exception {
 
             mockMvc.perform(post("/api/exams")
