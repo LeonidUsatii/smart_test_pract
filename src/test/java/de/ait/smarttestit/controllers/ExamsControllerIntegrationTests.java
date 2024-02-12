@@ -36,29 +36,11 @@ public class ExamsControllerIntegrationTests {
     @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     class PostExam {
 
-        @Test
-        @Sql(scripts = {"/sql/data.sql"})
-        void testAddExamPositive() throws Exception {
-
-            //assertThat(examTaskRepository.existsById(5L)).isTrue();
-
-            mockMvc.perform(post("/api/exams")
-                            .param("examScore", "70")
-                            .param("testStartTime", "2023-02-02T12:00")
-                            .param("examEndTime", "2023-02-02T13:00")
-                            .param("examDuration", "120")
-                            .param("examStatus", "PLANNED")
-                            .param("userId", "1")
-                            .param("examTaskId", "4"))
-                    .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.id").exists());
-        }
-
 //        @Test
 //        @Sql(scripts = {"/sql/data.sql"})
-//        void testAddExamNegativeInvalidUserId() throws Exception {
+//        void testAddExamPositive() throws Exception {
 //
-//            //assertThat(examTaskRepository.existsById(2L)).isTrue();
+//            //assertThat(examTaskRepository.existsById(5L)).isTrue();
 //
 //            mockMvc.perform(post("/api/exams")
 //                            .param("examScore", "70")
@@ -66,10 +48,28 @@ public class ExamsControllerIntegrationTests {
 //                            .param("examEndTime", "2023-02-02T13:00")
 //                            .param("examDuration", "120")
 //                            .param("examStatus", "PLANNED")
-//                            .param("userId", "3")
-//                            .param("examTaskId", "4"))
-//                    .andExpect(status().isNotFound());
+//                            .param("userId", "1")
+//                            .param("examTaskId", "3"))
+//                    .andExpect(status().isCreated())
+//                    .andExpect(jsonPath("$.id").exists());
 //        }
+
+        @Test
+        @Sql(scripts = {"/sql/data.sql"})
+        void testAddExamNegativeInvalidUserId() throws Exception {
+
+            //assertThat(examTaskRepository.existsById(2L)).isTrue();
+
+            mockMvc.perform(post("/api/exams")
+                            .param("examScore", "70")
+                            .param("testStartTime", "2023-02-02T12:00")
+                            .param("examEndTime", "2023-02-02T13:00")
+                            .param("examDuration", "120")
+                            .param("examStatus", "PLANNED")
+                            .param("userId", "3")
+                            .param("examTaskId", "3"))
+                    .andExpect(status().isNotFound());
+        }
     }
 
 //    @Nested
