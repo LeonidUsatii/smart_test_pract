@@ -37,7 +37,7 @@ public class ExamsControllerIntegrationTests {
     class PostExam {
 
         @Test
-        @Sql(scripts = {"/sql/data.sql"})
+        @Sql(scripts = {"/sql/clear-db.sql", "/sql/data.sql"})
         void testAddExamPositive() throws Exception {
 
             mockMvc.perform(post("/api/exams")
@@ -54,7 +54,7 @@ public class ExamsControllerIntegrationTests {
 
 
         @Test
-        @Sql(scripts = {"/sql/data.sql"})
+        @Sql(scripts = {"/sql/clear-db.sql", "/sql/data.sql"})
         void testAddExamNegativeInvalidUserId() throws Exception {
 
             mockMvc.perform(post("/api/exams")
