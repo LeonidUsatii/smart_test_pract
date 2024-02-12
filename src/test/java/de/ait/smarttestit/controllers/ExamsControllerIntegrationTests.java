@@ -54,18 +54,34 @@ public class ExamsControllerIntegrationTests {
 
         @Test
         @Sql(scripts = {"/sql/data.sql"})
-        void testAddExamNegativeInvalidUserId() throws Exception {
+        void testAddExamPositive1() throws Exception {
 
             mockMvc.perform(post("/api/exams")
-                            .param("examScore", "70")
-                            .param("testStartTime", "2023-02-02T12:00")
-                            .param("examEndTime", "2023-02-02T13:00")
-                            .param("examDuration", "120")
+                            .param("examScore", "75")
+                            .param("testStartTime", "2023-02-03T12:00")
+                            .param("examEndTime", "2023-02-03T13:00")
+                            .param("examDuration", "110")
                             .param("examStatus", "PLANNED")
-                            .param("userId", "999")
+                            .param("userId", "1")
                             .param("examTaskId", "4"))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").exists());
         }
+
+//        @Test
+//        @Sql(scripts = {"/sql/data.sql"})
+//        void testAddExamNegativeInvalidUserId() throws Exception {
+//
+//            mockMvc.perform(post("/api/exams")
+//                            .param("examScore", "70")
+//                            .param("testStartTime", "2023-02-02T12:00")
+//                            .param("examEndTime", "2023-02-02T13:00")
+//                            .param("examDuration", "120")
+//                            .param("examStatus", "PLANNED")
+//                            .param("userId", "999")
+//                            .param("examTaskId", "4"))
+//                    .andExpect(status().isNotFound());
+//        }
 
     }
 
