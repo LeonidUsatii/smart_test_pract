@@ -32,76 +32,76 @@ class UsersControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-//    @Nested
-//    @DisplayName("POST /users:")
-//    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-//    class PostUser {
-//
-//        @Test
-//        @Sql(scripts = {"/sql/data.sql"})
-//        void addAddUserPositive() throws Exception {
-//            NewUserDto newUser = new NewUserDto();
-//            newUser.setFirstName("Ivan");
-//            newUser.setLastName("Ivanov");
-//            newUser.setEmail("simple@mail.com");
-//            newUser.setHashPassword("qwerty007!");
-//            newUser.setUserRole("USER");
-//            newUser.setLevelOfUser(1);
-//
-//            mockMvc.perform(post("/api/users")
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content(objectMapper.writeValueAsString(newUser)))
-//                    .andExpect(status().isCreated())
-//                    .andExpect(jsonPath("$.id").exists());
-//        }
-//
-//        @Test
-//        @Sql(scripts = {"/sql/data.sql"})
-//        void addUserNegative_UserAlreadyExists() throws Exception {
-//            NewUserDto newUser = new NewUserDto();
-//            newUser.setFirstName("Existing");
-//            newUser.setLastName("User");
-//            newUser.setEmail("ivan.testov@example.com");
-//            newUser.setHashPassword("password");
-//            newUser.setUserRole("USER");
-//            newUser.setLevelOfUser(1);
-//
-//            mockMvc.perform(post("/api/users")
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content(objectMapper.writeValueAsString(newUser)))
-//                    .andExpect(status().isConflict());
-//        }
-//    }
-//
-//    @Nested
-//    @DisplayName("GET /users/{user-id}:")
-//    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-//    class GetUser {
-//
-//        @Test
-//        @Sql(scripts = {"/sql/data.sql"})
-//        void testGetUserPositive() throws Exception {
-//            Long userId = 1L;
-//
-//            mockMvc.perform(get("/api/users/{user-id}", userId)
-//                            .contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isOk())
-//                    .andExpect(jsonPath("$.id").value(userId))
-//                    .andExpect(jsonPath("$.firstName").value("Ivan"))
-//                    .andExpect(jsonPath("$.lastName").value("Testov"))
-//                    .andExpect(jsonPath("$.email").value("ivan.testov@example.com"));
-//        }
-//
-//        @Test
-//        @Sql(scripts = {"/sql/data.sql"})
-//        void testGetUserNegative() throws Exception {
-//            Long incorrectUserId = 777L;
-//
-//            mockMvc.perform(get("/api/users/{user-id}", incorrectUserId)
-//                            .contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isNotFound());
-//        }
-//    }
+    @Nested
+    @DisplayName("POST /users:")
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    class PostUser {
+
+        @Test
+        @Sql(scripts = {"/sql/data.sql"})
+        void addAddUserPositive() throws Exception {
+            NewUserDto newUser = new NewUserDto();
+            newUser.setFirstName("Ivan");
+            newUser.setLastName("Ivanov");
+            newUser.setEmail("simple@mail.com");
+            newUser.setHashPassword("qwerty007!");
+            newUser.setUserRole("USER");
+            newUser.setLevelOfUser(1);
+
+            mockMvc.perform(post("/api/users")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(newUser)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").exists());
+        }
+
+        @Test
+        @Sql(scripts = {"/sql/data.sql"})
+        void addUserNegative_UserAlreadyExists() throws Exception {
+            NewUserDto newUser = new NewUserDto();
+            newUser.setFirstName("Existing");
+            newUser.setLastName("User");
+            newUser.setEmail("ivan.testov@example.com");
+            newUser.setHashPassword("password");
+            newUser.setUserRole("USER");
+            newUser.setLevelOfUser(1);
+
+            mockMvc.perform(post("/api/users")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(newUser)))
+                    .andExpect(status().isConflict());
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /users/{user-id}:")
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    class GetUser {
+
+        @Test
+        @Sql(scripts = {"/sql/data.sql"})
+        void testGetUserPositive() throws Exception {
+            Long userId = 1L;
+
+            mockMvc.perform(get("/api/users/{user-id}", userId)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(userId))
+                    .andExpect(jsonPath("$.firstName").value("Ivan"))
+                    .andExpect(jsonPath("$.lastName").value("Testov"))
+                    .andExpect(jsonPath("$.email").value("ivan.testov@example.com"));
+        }
+
+        @Test
+        @Sql(scripts = {"/sql/data.sql"})
+        void testGetUserNegative() throws Exception {
+            Long incorrectUserId = 777L;
+
+            mockMvc.perform(get("/api/users/{user-id}", incorrectUserId)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        }
+    }
 
     @Nested
     @DisplayName("GET /users:")
