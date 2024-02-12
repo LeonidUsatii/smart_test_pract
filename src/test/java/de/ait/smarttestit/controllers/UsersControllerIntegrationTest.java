@@ -159,42 +159,42 @@ class UsersControllerIntegrationTest {
                     .andExpect(status().isNotFound());
         }
     }
-//
-//    @Nested
-//    @DisplayName("UPDATE /users/{user-id}:")
-//    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-//    class UpdateUser {
-//
-//        @Test
-//        @Sql(scripts = {"/sql/data.sql"})
-//        void testUpdateUserPositive() throws Exception {
-//            UpdateUserDto updateUser = new UpdateUserDto();
-//            updateUser.setFirstName("UpdatedFirstName");
-//            updateUser.setLastName("UpdatedLastName");
-//            updateUser.setEmail("updated.email@example.com");
-//            updateUser.setUserRole("ADMIN");
-//            updateUser.setLevelOfUser(2);
-//
-//            Long userId = 1L;
-//
-//            mockMvc.perform(put("/api/users/{user-id}", userId)
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content(objectMapper.writeValueAsString(updateUser)))
-//                    .andExpect(status().isAccepted())
-//                    .andExpect(jsonPath("$.firstName").value(updateUser.getFirstName()));
-//        }
-//
-//        @Test
-//        @Sql(scripts = {"/sql/data.sql"})
-//        void testUpdateUserNegative() throws Exception {
-//            UpdateUserDto updateUser = new UpdateUserDto();
-//
-//            Long nonExistentUserId = 999L;
-//
-//            mockMvc.perform(put("/api/users/{user-id}", nonExistentUserId)
-//                            .contentType(MediaType.APPLICATION_JSON)
-//                            .content(objectMapper.writeValueAsString(updateUser)))
-//                    .andExpect(status().isNotFound());
-//        }
-//    }
+
+    @Nested
+    @DisplayName("UPDATE /users/{user-id}:")
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    class UpdateUser {
+
+        @Test
+        @Sql(scripts = {"/sql/data.sql"})
+        void testUpdateUserPositive() throws Exception {
+            UpdateUserDto updateUser = new UpdateUserDto();
+            updateUser.setFirstName("UpdatedFirstName");
+            updateUser.setLastName("UpdatedLastName");
+            updateUser.setEmail("updated.email@example.com");
+            updateUser.setUserRole("ADMIN");
+            updateUser.setLevelOfUser(2);
+
+            Long userId = 1L;
+
+            mockMvc.perform(put("/api/users/{user-id}", userId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateUser)))
+                    .andExpect(status().isAccepted())
+                    .andExpect(jsonPath("$.firstName").value(updateUser.getFirstName()));
+        }
+
+        @Test
+        @Sql(scripts = {"/sql/data.sql"})
+        void testUpdateUserNegative() throws Exception {
+            UpdateUserDto updateUser = new UpdateUserDto();
+
+            Long nonExistentUserId = 999L;
+
+            mockMvc.perform(put("/api/users/{user-id}", nonExistentUserId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateUser)))
+                    .andExpect(status().isNotFound());
+        }
+    }
 }
