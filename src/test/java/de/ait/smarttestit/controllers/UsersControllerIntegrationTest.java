@@ -103,62 +103,62 @@ class UsersControllerIntegrationTest {
         }
     }
 
-    @Nested
-    @DisplayName("GET /users:")
-    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-    class GetListUsers {
-
-        @Test
-        @Sql(scripts = {"/sql/data.sql"})
-        void testGetListUsersPositive() throws Exception {
-            mockMvc.perform(get("/api/users")
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$").isArray())
-                    .andExpect(jsonPath("$[0].id").isNotEmpty())
-                    .andExpect(jsonPath("$[0].firstName").value("Ivan"))
-                    .andExpect(jsonPath("$[0].lastName").value("Testov"));
-        }
-
-        @Test
-        @Sql(scripts = {"/sql/data.sql"})
-        void testGetListUsersNegative() throws Exception {
-
-            Long incorrectUserId = 777L;
-
-            mockMvc.perform(get("/api/users/{user-id}", incorrectUserId)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound());
-        }
-    }
-
 //    @Nested
-//    @DisplayName("DELETE /users/{user-id}:")
+//    @DisplayName("GET /users:")
 //    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-//    class DeleteUser {
+//    class GetListUsers {
 //
 //        @Test
 //        @Sql(scripts = {"/sql/data.sql"})
-//        void testDeleteUserPositive() throws Exception {
-//
-//            Long existingUserId = 1L;
-//
-//            mockMvc.perform(delete("/api/users/{user-id}", existingUserId)
+//        void testGetListUsersPositive() throws Exception {
+//            mockMvc.perform(get("/api/users")
 //                            .contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isNoContent());
+//                    .andExpect(status().isOk())
+//                    .andExpect(jsonPath("$").isArray())
+//                    .andExpect(jsonPath("$[0].id").isNotEmpty())
+//                    .andExpect(jsonPath("$[0].firstName").value("Ivan"))
+//                    .andExpect(jsonPath("$[0].lastName").value("Testov"));
 //        }
 //
 //        @Test
 //        @Sql(scripts = {"/sql/data.sql"})
-//        void testDeleteUserNegative() throws Exception {
+//        void testGetListUsersNegative() throws Exception {
 //
-//            Long nonExistentUserId = 999L;
+//            Long incorrectUserId = 777L;
 //
-//            mockMvc.perform(delete("/api/users/{user-id}", nonExistentUserId)
+//            mockMvc.perform(get("/api/users/{user-id}", incorrectUserId)
 //                            .contentType(MediaType.APPLICATION_JSON))
 //                    .andExpect(status().isNotFound());
 //        }
 //    }
+
+    @Nested
+    @DisplayName("DELETE /users/{user-id}:")
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    class DeleteUser {
+
+        @Test
+        @Sql(scripts = {"/sql/data.sql"})
+        void testDeleteUserPositive() throws Exception {
+
+            Long existingUserId = 1L;
+
+            mockMvc.perform(delete("/api/users/{user-id}", existingUserId)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNoContent());
+        }
+
+        @Test
+        @Sql(scripts = {"/sql/data.sql"})
+        void testDeleteUserNegative() throws Exception {
+
+            Long nonExistentUserId = 999L;
+
+            mockMvc.perform(delete("/api/users/{user-id}", nonExistentUserId)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        }
+    }
 //
 //    @Nested
 //    @DisplayName("UPDATE /users/{user-id}:")
