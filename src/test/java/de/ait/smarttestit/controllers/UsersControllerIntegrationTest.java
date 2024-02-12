@@ -38,7 +38,7 @@ class UsersControllerIntegrationTest {
     class DeleteUser {
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void testDeleteUserPositive() throws Exception {
 
             Long existingUserId = 1L;
@@ -49,7 +49,7 @@ class UsersControllerIntegrationTest {
         }
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void testDeleteUserNegative() throws Exception {
 
             Long nonExistentUserId = 999L;
@@ -85,7 +85,7 @@ class UsersControllerIntegrationTest {
         }
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void addUserNegative_UserAlreadyExists() throws Exception {
             NewUserDto newUser = new NewUserDto();
             newUser.setFirstName("Existing");
@@ -112,7 +112,7 @@ class UsersControllerIntegrationTest {
     class GetUser {
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void testGetUserPositive() throws Exception {
             Long userId = 1L;
 
@@ -126,7 +126,7 @@ class UsersControllerIntegrationTest {
         }
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void testGetUserNegative() throws Exception {
             Long incorrectUserId = 777L;
 
@@ -142,7 +142,7 @@ class UsersControllerIntegrationTest {
     class GetListUsers {
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void testGetListUsersPositive() throws Exception {
             mockMvc.perform(get("/api/users")
                             .contentType(MediaType.APPLICATION_JSON))
@@ -154,7 +154,7 @@ class UsersControllerIntegrationTest {
         }
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void testGetListUsersNegative() throws Exception {
 
             Long incorrectUserId = 777L;
@@ -172,7 +172,7 @@ class UsersControllerIntegrationTest {
     class UpdateUser {
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void testUpdateUserPositive() throws Exception {
             UpdateUserDto updateUser = new UpdateUserDto();
             updateUser.setFirstName("UpdatedFirstName");
@@ -191,7 +191,7 @@ class UsersControllerIntegrationTest {
         }
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
+        @Sql(scripts = {"/sql/data.sql"})
         void testUpdateUserNegative() throws Exception {
             UpdateUserDto updateUser = new UpdateUserDto();
 
