@@ -75,7 +75,7 @@ class UsersControllerIntegrationTest {
 
     @Nested
     @DisplayName("GET /users/{user-id}:")
-    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    //@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     class GetUser {
 
         @Test
@@ -134,7 +134,7 @@ class UsersControllerIntegrationTest {
 
     @Nested
     @DisplayName("DELETE /users/{user-id}:")
-    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    //@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     class DeleteUser {
 
         @Test
