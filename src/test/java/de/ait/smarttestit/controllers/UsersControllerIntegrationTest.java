@@ -73,33 +73,33 @@ class UsersControllerIntegrationTest {
     }
 
 
-//    @Nested
-//    @DisplayName("DELETE /users/{user-id}:")
-//    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-//    class DeleteUser {
-//
-//        @Test
-//        @Sql(scripts = {"/sql/schema.sql", "/sql/users.sql"})
-//        void testDeleteUserPositive() throws Exception {
-//
-//            Long existingUserId = 1L;
-//
-//            mockMvc.perform(delete("/api/users/{user-id}", existingUserId)
-//                            .contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isNoContent());
-//        }
-//
-//        @Test
-//        @Sql(scripts = {"/sql/schema.sql", "/sql/users.sql"})
-//        void testDeleteUserNegative() throws Exception {
-//
-//            Long nonExistentUserId = 999L;
-//
-//            mockMvc.perform(delete("/api/users/{user-id}", nonExistentUserId)
-//                            .contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isNotFound());
-//        }
-//    }
+    @Nested
+    @DisplayName("DELETE /users/{user-id}:")
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    class DeleteUser {
+
+        @Test
+        @Sql(scripts = {"/sql/schema.sql", "/sql/users.sql"})
+        void testDeleteUserPositive() throws Exception {
+
+            Long existingUserId = 1L;
+
+            mockMvc.perform(delete("/api/users/{user-id}", existingUserId)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNoContent());
+        }
+
+        @Test
+        @Sql(scripts = {"/sql/schema.sql", "/sql/users.sql"})
+        void testDeleteUserNegative() throws Exception {
+
+            Long nonExistentUserId = 999L;
+
+            mockMvc.perform(delete("/api/users/{user-id}", nonExistentUserId)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
+        }
+    }
 
 
 //    @Nested
