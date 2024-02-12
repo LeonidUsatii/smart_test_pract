@@ -49,7 +49,7 @@ class UsersControllerIntegrationTest {
         }
 
         @Test
-        @Sql(scripts = {"/sql/schema.sql","/sql/data.sql"})
+        @Sql(scripts = {"/sql/schema.sql", "/sql/data.sql"})
         void testDeleteUserNegative() throws Exception {
 
             Long nonExistentUserId = 999L;
