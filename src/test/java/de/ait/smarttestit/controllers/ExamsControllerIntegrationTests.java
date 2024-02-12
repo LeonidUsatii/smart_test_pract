@@ -66,7 +66,7 @@ public class ExamsControllerIntegrationTests {
                             .param("examEndTime", "2023-02-02T13:00")
                             .param("examDuration", "120")
                             .param("examStatus", "PLANNED")
-                            .param("userId", "9999")
+                            .param("userId", "3")
                             .param("examTaskId", "2"))
                     .andExpect(status().isNotFound());
         }
