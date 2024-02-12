@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Endpoint /users works:")
 @DisplayNameGeneration(value = DisplayNameGenerator.ReplaceUnderscores.class)
 @ActiveProfiles("test")
-@Transactional
+//@Transactional
 class UsersControllerIntegrationTest {
 
     @Autowired
