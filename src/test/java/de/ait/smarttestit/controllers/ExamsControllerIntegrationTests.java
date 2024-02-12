@@ -52,7 +52,13 @@ public class ExamsControllerIntegrationTests {
                     .andExpect(jsonPath("$.id").exists());
         }
 
+    }
 
+    @Nested
+    @DisplayName("POST /exams:")
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    class PostExamN {
+        
         @Test
         @Sql(scripts = {"/sql/clear-db.sql", "/sql/data.sql"})
         void testAddExamNegativeInvalidUserId() throws Exception {
