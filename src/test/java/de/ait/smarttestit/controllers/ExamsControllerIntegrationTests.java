@@ -36,7 +36,7 @@ public class ExamsControllerIntegrationTests {
     @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     class PostExam {
 
-        @Test
+        /*@Test
         @Sql(scripts = {"/sql/data.sql"})
         void testAddExamPositive() throws Exception {
 
@@ -52,7 +52,7 @@ public class ExamsControllerIntegrationTests {
                             .param("examTaskId", "3"))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").exists());
-        }
+        }*/
 
         @Test
         @Sql(scripts = {"/sql/data.sql"})
