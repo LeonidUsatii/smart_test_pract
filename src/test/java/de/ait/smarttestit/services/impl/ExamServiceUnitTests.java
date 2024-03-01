@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -42,38 +43,47 @@ public class ExamServiceUnitTests {
     private static final ExamStatus EXAM_STATUS = ExamStatus.COMPLETED;
     private static final String STATUS_OF_EXAM = "COMPLETED";
     private static final Long USER_ID = 1L;
+    private static final Long USER_ID_NULL = null;
     private static final Long APPLICANT_ID = 1L;
-    private static final Long TEST_ID = 5L;
+    private static final Long APPLICANT_ID_NULL = null;
+    private static final Long EXAM_TASK_ID = 5L;
+    private static final String TEST_TITLE = "General";
     private static final List<Exam> EXAMS = new ArrayList<>();
     private static final List<TestType> TEST_TYPES = new ArrayList<>();
-    private static final Long USER_Id = 1L;
-    private static final String FIRST_NAME = "FirstName";
-    private static final String LAST_NAME = "LastName";
+    private static final String FIRST_NAME  = "FirstName";
+    private static final String LAST_NAME  = "LastName";
     private static final String EMAIL = "simple@mail.com";
-    private static final String PASSWORD = "password";
-    private static final UserRole USER_ROLE = UserRole.USER;
+    private static final String PASSWORD  = "password";
+    private static final UserRole USER_ROLE  = UserRole.USER;
     private static final int LEVEL_OF_USER = 5;
-    private static final User USER = new User(USER_Id, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, USER_ROLE, LEVEL_OF_USER);
+    private static final User USER = new User(USER_ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, USER_ROLE, LEVEL_OF_USER);
     private static final Applicant APPLICANT = new Applicant(APPLICANT_ID, "John", "Doe",
-            "john.doe@example.com", "123 Main St", "555-1234", EXAMS,null);
-    private static final ExamTask EXAM_TASK = new ExamTask();
+            "john.doe@example.com", "123 Main St", "555-1234");
+    private static final ExamTask EXAM_TASK = new ExamTask
+            (EXAM_TASK_ID, TEST_TITLE, TEST_TYPES,  new Exam());
     private static final Exam EXAM = new Exam(EXAM_Id, EXAM_SCORE, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION,
             EXAM_DURATION, EXAM_STATUS, USER, APPLICANT, EXAM_TASK);
+
+    private static final Exam EXAM_USER_IS_NULL = new Exam(EXAM_Id, EXAM_SCORE, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION,
+            EXAM_DURATION, EXAM_STATUS, null, APPLICANT, EXAM_TASK);
+
+    private static final Exam EXAM_APPLICANT_IS_NULL = new Exam(EXAM_Id, EXAM_SCORE, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION,
+            EXAM_DURATION, EXAM_STATUS, USER, null, EXAM_TASK);
     private static final NewExamDto NEW_EXAM_DTO_USER_APPLICANT = new NewExamDto(EXAM_SCORE, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION,
-            EXAM_DURATION, STATUS_OF_EXAM, USER_ID, APPLICANT_ID, TEST_ID);
+            EXAM_DURATION, STATUS_OF_EXAM, USER_ID, APPLICANT_ID, EXAM_TASK_ID);
     private static final NewExamDto NEW_EXAM_DTO_USER_NULL_APPLICANT_NULL = new NewExamDto(EXAM_SCORE, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION,
-            EXAM_DURATION, STATUS_OF_EXAM, null, null, TEST_ID);
+            EXAM_DURATION, STATUS_OF_EXAM, null, null, EXAM_TASK_ID);
     private static final NewExamDto NEW_EXAM_DTO_USER_NULL = new NewExamDto(EXAM_SCORE, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION,
-            EXAM_DURATION, STATUS_OF_EXAM, null, APPLICANT_ID, TEST_ID);
+            EXAM_DURATION, STATUS_OF_EXAM, null, APPLICANT_ID, 8L);
     private static final NewExamDto NEW_EXAM_DTO_APPLICANT_NULL = new NewExamDto(EXAM_SCORE, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION,
-            EXAM_DURATION, STATUS_OF_EXAM, USER_ID, null, TEST_ID);
+            EXAM_DURATION, STATUS_OF_EXAM, USER_ID, null, EXAM_TASK_ID);
 
     @Mock
-    private ExamRepository examRepository;
+    private ExamRepository examsRepository;
     @Mock
-    private UserService userService;
+    private UserService usersService;
     @Mock
-    private ApplicantService applicantService;
+    private ApplicantService applicantsService;
     @Mock
     private ExamTasksService examTasksService;
     @InjectMocks
@@ -86,7 +96,7 @@ public class ExamServiceUnitTests {
         @Test
         void getExamOrThrowPositive() {
 
-            when(examRepository.findById(EXAM_Id)).thenReturn(Optional.of(EXAM));
+            when(examsRepository.findById(EXAM_Id)).thenReturn(Optional.of(EXAM));
 
             Exam foundExam = examsServices.getExamOrThrow(EXAM_Id);
 
@@ -96,7 +106,7 @@ public class ExamServiceUnitTests {
 
         @Test
         void getExamOrThrowNegative() {
-            when(examRepository.findById(EXAM_Id)).thenReturn(Optional.empty());
+            when(examsRepository.findById(EXAM_Id)).thenReturn(Optional.empty());
 
             RestException thrown = assertThrows(RestException.class, () -> examsServices.getExamOrThrow(EXAM_Id),
                     "Expected getExamOrThrow to throw, but it didn't");
@@ -137,11 +147,11 @@ public class ExamServiceUnitTests {
     class AddExam {
 
         @Test
-        void testAddExamUserNotNullPositive() {
+        void testAddExamApplicantNullPositive() {
 
-            when(userService.getUserOrThrow(NEW_EXAM_DTO_APPLICANT_NULL.userId())).thenReturn(USER);
+            when(usersService.getUserOrThrow(NEW_EXAM_DTO_APPLICANT_NULL.userId())).thenReturn(USER);
             when(examTasksService.getByIdOrThrow(NEW_EXAM_DTO_APPLICANT_NULL.examTaskId())).thenReturn(EXAM_TASK);
-            when(examRepository.save(any(Exam.class))).thenReturn(EXAM);
+            when(examsRepository.save(any(Exam.class))).thenReturn(EXAM_APPLICANT_IS_NULL);
 
             ExamDto examDto = examsServices.addExam(NEW_EXAM_DTO_APPLICANT_NULL);
 
@@ -151,38 +161,21 @@ public class ExamServiceUnitTests {
             assertEquals(EXAM_DURATION, examDto.examDuration());
             assertEquals(STATUS_OF_EXAM, examDto.examStatus());
             assertEquals(USER_ID, examDto.userId());
-            assertEquals(APPLICANT_ID, examDto.applicantId());
+            assertEquals(APPLICANT_ID_NULL, examDto.applicantId());
+            assertEquals(EXAM_TASK_ID, examDto.examTaskId());
 
-            verify(examRepository).save(any(Exam.class));
-        }
-
-        @Test
-        void testAddExamApplicantNotNullPositive() {
-
-            when(applicantService.getApplicantOrThrow(NEW_EXAM_DTO_USER_NULL.applicantId())).thenReturn(APPLICANT);
-            when(examTasksService.getByIdOrThrow(NEW_EXAM_DTO_USER_NULL.examTaskId())).thenReturn(EXAM_TASK);
-            when(examRepository.save(any(Exam.class))).thenReturn(EXAM);
-
-            ExamDto examDto = examsServices.addExam(NEW_EXAM_DTO_USER_NULL);
-
-            assertEquals(EXAM_SCORE, examDto.examScore());
-            assertEquals(DEFAULT_DATE_START, LocalDateTime.parse(examDto.examStartTime()));
-            assertEquals(DEFAULT_DATE_EXPIRATION, LocalDateTime.parse(examDto.examEndTime()));
-            assertEquals(EXAM_DURATION, examDto.examDuration());
-            assertEquals(STATUS_OF_EXAM, examDto.examStatus());
-            assertEquals(USER_ID, examDto.userId());
-            assertEquals(APPLICANT_ID, examDto.applicantId());
-
-            verify(examRepository).save(any(Exam.class));
+            verify(examsRepository).save(any(Exam.class));
         }
 
         @Test
         void testAddExamNegative_IncorrectValueExamStatus() {
 
             NewExamDto newExam = new NewExamDto(EXAM_SCORE, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION, EXAM_DURATION,
-                    "INCORRECT_VALUE_EXAM_STATUS", APPLICANT_ID, USER_ID, TEST_ID);
+                    "INCORRECT_VALUE_EXAM_STATUS", APPLICANT_ID, USER_ID, EXAM_TASK_ID);
 
-            assertThrows(RestException.class, () -> examsServices.addExam(newExam));
+            assertThrows(RestException.class, () -> {
+                examsServices.addExam(newExam);
+            });
         }
 
         @Test
@@ -193,16 +186,6 @@ public class ExamServiceUnitTests {
             assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
             assertEquals("Neither userId nor applicantId provided", thrown.getMessage());
         }
-
-        @Test
-        void testAddExamNegative_WhenUserNotNullAndApplicantNotNull() {
-
-            RestException thrown = assertThrows(RestException.class, () -> examsServices.addExam(NEW_EXAM_DTO_USER_APPLICANT));
-
-            assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
-            assertEquals("Both user and applicant are defined", thrown.getMessage());
-        }
-
     }
 
     @Nested
@@ -217,17 +200,17 @@ public class ExamServiceUnitTests {
             List<ExamDto> actual = exams.stream()
                     .map(ExamDto::from)
                     .collect(Collectors.toList());
-            given(examRepository.findAll()).willReturn(exams);
+            given(examsRepository.findAll()).willReturn(exams);
             List<ExamDto> expected = examsServices.getListExams();
             assertEquals(expected, actual);
-            verify(examRepository).findAll();
+            verify(examsRepository).findAll();
         }
 
         @Test
         void testGetListExamsNegative() {
 
             List<Exam> exams = new ArrayList<>();
-            given(examRepository.findAll()).willReturn(exams);
+            given(examsRepository.findAll()).willReturn(exams);
             List<ExamDto> expected = examsServices.getListExams();
 
             RestException exception = Assertions.assertThrows(RestException.class, () -> {
@@ -249,7 +232,7 @@ public class ExamServiceUnitTests {
         @Test
         void testGetExamPositive() {
 
-            when(examRepository.findById(EXAM_Id)).thenReturn(Optional.of(EXAM));
+            when(examsRepository.findById(EXAM_Id)).thenReturn(Optional.of(EXAM));
 
             ExamDto actual = ExamDto.from(EXAM);
             ExamDto expected = examsServices.getExam(EXAM_Id);
@@ -281,12 +264,12 @@ public class ExamServiceUnitTests {
                     EXAM_DURATION, EXAM_STATUS, USER, APPLICANT, EXAM_TASK);
 
             UpdateExamDto updateExam = new UpdateExamDto(EXAM_SCORE + 10, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION,
-                    EXAM_DURATION, STATUS_OF_EXAM, USER_ID, APPLICANT_ID, TEST_ID);
+                    EXAM_DURATION, STATUS_OF_EXAM, USER_ID, APPLICANT_ID, EXAM_TASK_ID);
 
-            when(examRepository.findById(2L)).thenReturn(Optional.of(exam));
-            when(userService.getUserOrThrow(updateExam.userId())).thenReturn(USER);
+            when(examsRepository.findById(2L)).thenReturn(Optional.of(exam));
+            when(usersService.getUserOrThrow(updateExam.userId())).thenReturn(USER);
             when(examTasksService.getByIdOrThrow(updateExam.examTaskId())).thenReturn(EXAM_TASK);
-            when(examRepository.save(any(Exam.class))).thenReturn(exam);
+            when(examsRepository.save(any(Exam.class))).thenReturn(exam);
 
             ExamDto examDto = examsServices.updateExam(2L, updateExam);
 
@@ -297,9 +280,9 @@ public class ExamServiceUnitTests {
             assertEquals(EXAM_DURATION, examDto.examDuration());
             assertEquals(STATUS_OF_EXAM, examDto.examStatus());
             assertEquals(USER_ID, examDto.userId());
-            //assertEquals(TEST_ID, examDto.examParams());
+            assertEquals(EXAM_TASK_ID, examDto.examTaskId());
 
-            verify(examRepository).save(any(Exam.class));
+            verify(examsRepository).save(any(Exam.class));
         }
 
         @Test
@@ -308,7 +291,7 @@ public class ExamServiceUnitTests {
             Long examId = 2L;
 
             UpdateExamDto updateExam = new UpdateExamDto(EXAM_SCORE + 10, DEFAULT_DATE_START, DEFAULT_DATE_EXPIRATION,
-                    EXAM_DURATION, STATUS_OF_EXAM, APPLICANT_ID, USER_ID, TEST_ID);
+                    EXAM_DURATION, STATUS_OF_EXAM, APPLICANT_ID, USER_ID, EXAM_TASK_ID);
 
             RestException exception = assertThrows(RestException.class,
                     () -> examsServices.updateExam(examId, updateExam));
@@ -325,7 +308,7 @@ public class ExamServiceUnitTests {
         @Test
         void testDeleteExamPositive() {
 
-            when(examRepository.findById(EXAM_Id)).thenReturn(Optional.of(EXAM));
+            when(examsRepository.findById(EXAM_Id)).thenReturn(Optional.of(EXAM));
 
             ExamDto deleteExam = examsServices.deleteExam(EXAM_Id);
 
@@ -336,9 +319,9 @@ public class ExamServiceUnitTests {
             assertEquals(EXAM_DURATION, deleteExam.examDuration());
             assertEquals(STATUS_OF_EXAM, deleteExam.examStatus());
             assertEquals(USER_ID, deleteExam.userId());
-           // assertEquals(TEST_ID, deleteExam.examParams());
+            assertEquals(EXAM_TASK_ID, deleteExam.examTaskId());
 
-            verify(examRepository, times(1)).delete(EXAM);
+            verify(examsRepository, times(1)).delete(EXAM);
         }
 
         @Test
@@ -351,6 +334,34 @@ public class ExamServiceUnitTests {
 
             assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
             assertEquals("Exam with id <" + examId + "> not found", exception.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("save exam")
+    class saveExam {
+
+        @Test
+        void testSaveExamPositive() {
+
+            when(examsRepository.existsById(any(Long.class))).thenReturn(false);
+            when(examsRepository.save(any(Exam.class))).thenReturn(EXAM_USER_IS_NULL);
+
+            Exam savedExam = examsServices.save(EXAM_USER_IS_NULL);
+
+            assertNotNull(savedExam);
+            assertEquals(EXAM_USER_IS_NULL.getId(), savedExam.getId());
+            verify(examsRepository).save(any(Exam.class));
+        }
+
+        @Test
+        void testSaveExamNegative() {
+
+            when(examsRepository.existsById(any(Long.class))).thenReturn(true);
+
+            assertThrows(DataIntegrityViolationException.class, () -> examsServices.save(EXAM_USER_IS_NULL));
+
+            verify(examsRepository, never()).save(any(Exam.class));
         }
     }
 }

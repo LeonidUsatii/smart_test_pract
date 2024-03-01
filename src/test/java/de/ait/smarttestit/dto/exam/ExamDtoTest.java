@@ -1,3 +1,5 @@
+package de.ait.smarttestit.dto.exam;
+
 import de.ait.smarttestit.dto.exam.ExamDto;
 import de.ait.smarttestit.models.*;
 import jakarta.validation.ConstraintViolation;
@@ -38,7 +40,7 @@ class ExamDtoTest {
         user.setId(2L);
         exam.setUser(user);
         Applicant applicant = new Applicant();
-        applicant.setId(2L);
+        applicant.setId(null);
         exam.setApplicant(applicant);
         ExamTask examTask = new ExamTask();
         examTask.setId(3L);
