@@ -1,6 +1,7 @@
 package de.ait.smarttestit.services;
 
 import de.ait.smarttestit.dto.exam_task.ExamTaskDto;
+import de.ait.smarttestit.dto.exam_task.NewExamTaskDto;
 import de.ait.smarttestit.dto.exam_task.UpdateExamTaskDto;
 import de.ait.smarttestit.dto.test_type.NewTestTypeDto;
 import de.ait.smarttestit.models.ExamTask;
@@ -13,7 +14,7 @@ public interface ExamTasksService {
 
     boolean isExamTaskTitleUnique(String examTaskTitle);
 
-   // ExamTaskDto addExamTask(@NonNull final NewTestsParamDto newExamTask);
+    ExamTaskDto addExamTask(@NonNull final NewExamTaskDto newExamTask);
 
     List<ExamTaskDto> getListExamTasks();
 

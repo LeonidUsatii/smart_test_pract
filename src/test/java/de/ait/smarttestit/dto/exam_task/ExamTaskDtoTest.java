@@ -42,10 +42,8 @@ class ExamTaskDtoTest {
         examTask.setId(1L);
         examTask.setExamTaskTitle("Mocked Title");
 
-        // when
         ExamTaskDto examTaskDto = from(examTask);
 
-        // then
         assertEquals(examTask.getId(), examTaskDto.id());
         assertEquals(examTask.getExamTaskTitle(), examTaskDto.examTaskTitle());
     }
@@ -53,17 +51,14 @@ class ExamTaskDtoTest {
     @Test
     @DisplayName("Test validation of fields in ExamTaskDto")
     void validationShouldDetectInvalidFields() {
-        // given
+
         ExamTaskDto examTaskDto = new ExamTaskDto(-1L, "");
 
-        // create the validator
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        // when
         Set<ConstraintViolation<ExamTaskDto>> violations = validator.validate(examTaskDto);
 
-        // then
         assertEquals(3, violations.size());
         Map<String, List<String>> groupedViolations = violations.stream()
                 .collect(Collectors.groupingBy(violation -> violation.getPropertyPath().toString(),
