@@ -15,6 +15,7 @@ import de.ait.smarttestit.services.ExamService;
 import de.ait.smarttestit.services.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -138,5 +139,15 @@ public class ExamServiceImpl implements ExamService {
     public Exam getExamOrThrow(@NonNull final Long examId) {
         return examRepository.findById(examId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Exam with id <" + examId + "> not found"));
+    }
+
+    @Override
+    public Exam save(Exam exam) {
+       if(examRepository.existsById(exam.getId()))  {
+           throw new DataIntegrityViolationException("Exam with ID " + exam.getId() + " already exists.");
+       }
+       else {
+           return examRepository.save(exam);
+       }
     }
 }

@@ -1,6 +1,7 @@
 package de.ait.smarttestit.services.impl;
 
 import de.ait.smarttestit.dto.exam_task.ExamTaskDto;
+import de.ait.smarttestit.dto.exam_task.NewExamTaskDto;
 import de.ait.smarttestit.dto.exam_task.UpdateExamTaskDto;
 import de.ait.smarttestit.dto.test_type.NewTestTypeDto;
 import de.ait.smarttestit.dto.test_type.TestTypeDto;
@@ -29,18 +30,18 @@ public class ExamTaskServiceImpl implements ExamTasksService {
         return examTaskRepository.findByExamTaskTitle(examTaskTitle).isEmpty();
     }
 
-  /*  @Override
-    public ExamTaskDto addExamTask(@NonNull NewTestsParamDto newExamTask) {
+    @Override
+    public ExamTaskDto addExamTask(@NonNull NewExamTaskDto newExamTask) {
 
-        if (!isExamTaskTitleUnique(newExamTask.examTitle())) {
+        if (!isExamTaskTitleUnique(newExamTask.examTaskTitle())) {
             throw new IllegalArgumentException("Exam task title must be unique");
         }
 
-        ExamTask examTask = new ExamTask(newExamTask.examTitle());
+        ExamTask examTask = new ExamTask(newExamTask.examTaskTitle());
         ExamTask savedExamTask = examTaskRepository.save(examTask);
 
-        return from(savedExamTask);
-    }*/
+        return ExamTaskDto.from(savedExamTask);
+    }
 
     @Override
     public ExamTaskDto getExamTask(@NonNull Long examId) {

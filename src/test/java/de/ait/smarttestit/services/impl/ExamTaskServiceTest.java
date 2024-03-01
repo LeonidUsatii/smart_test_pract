@@ -1,6 +1,7 @@
 package de.ait.smarttestit.services.impl;
 
 import de.ait.smarttestit.dto.exam_task.ExamTaskDto;
+import de.ait.smarttestit.dto.exam_task.NewExamTaskDto;
 import de.ait.smarttestit.dto.exam_task.UpdateExamTaskDto;
 import de.ait.smarttestit.dto.question.QuestionDto;
 import de.ait.smarttestit.dto.test_type.NewTestTypeDto;
@@ -40,8 +41,7 @@ public class ExamTaskServiceTest {
     private static final Long QUESTION_ID = 1L;
     private static final String EXAM_TASK_TITLE = "Java beginner level";
     private static final ExamTask EXAM_TASK = new ExamTask(EXAM_TASK_Id, EXAM_TASK_TITLE);
-   // private static final NewTestsParamDto NEW_EXAM_TASK = new NewTestsParamDto(
-    //        EXAM_TASK_TITLE, TEST_TYPE_ID, EXAM_TASK.getQuestionLevel(), EXAM_TASK.getQuestionCount());
+    private static final NewExamTaskDto NEW_EXAM_TASK = new NewExamTaskDto(EXAM_TASK_TITLE);
     private static final String NEW_QUESTION_TEXT = "This is a new Question";
     private static final String TEST_TYPE_TITLE = "Java beginner level";
     private static final List<Question> QUESTION_SET = new ArrayList<>();
@@ -118,7 +118,7 @@ public class ExamTaskServiceTest {
         }
     }
 
-  /*  @Nested
+    @Nested
     @DisplayName("add examTask")
     class AddExamTask {
 
@@ -128,12 +128,12 @@ public class ExamTaskServiceTest {
             when(examTaskRepository.findByExamTaskTitle(anyString())).thenReturn(Optional.empty());
             when(examTaskRepository.save(any(ExamTask.class))).thenReturn(EXAM_TASK);
 
-           // ExamTaskDto result = examTasksServices.addExamTask(NEW_EXAM_TASK);
+            ExamTaskDto result = examTasksServices.addExamTask(NEW_EXAM_TASK);
 
-           // assertNotNull(result, "The result should not be null");
-           // assertEquals(NEW_EXAM_TASK.examTitle(), result.examTaskTitle(), "The exam task titles should match");
+            assertNotNull(result, "The result should not be null");
+            assertEquals(NEW_EXAM_TASK.examTaskTitle(), result.examTaskTitle(), "The exam task titles should match");
 
-           // verify(examTaskRepository).findByExamTaskTitle(NEW_EXAM_TASK.examTitle());
+            verify(examTaskRepository).findByExamTaskTitle(NEW_EXAM_TASK.examTaskTitle());
             verify(examTaskRepository).save(any(ExamTask.class));
         }
 
@@ -142,9 +142,9 @@ public class ExamTaskServiceTest {
 
             when(examTaskRepository.findByExamTaskTitle(anyString())).thenReturn(Optional.of(EXAM_TASK));
 
-         //   assertThrows(IllegalArgumentException.class, () -> examTasksServices.addExamTask(NEW_EXAM_TASK), "Exam task title must be unique");
+            assertThrows(IllegalArgumentException.class, () -> examTasksServices.addExamTask(NEW_EXAM_TASK), "Exam task title must be unique");
         }
-    }*/
+    }
 
     @Nested
     @DisplayName("get examTask")

@@ -44,7 +44,6 @@ public class ExamServiceUnitTests {
     private static final Long USER_ID = 1L;
     private static final Long APPLICANT_ID = 1L;
     private static final Long TEST_ID = 5L;
-    private static final String TEST_TITLE = "General";
     private static final List<Exam> EXAMS = new ArrayList<>();
     private static final List<TestType> TEST_TYPES = new ArrayList<>();
     private static final Long USER_Id = 1L;
@@ -153,7 +152,6 @@ public class ExamServiceUnitTests {
             assertEquals(STATUS_OF_EXAM, examDto.examStatus());
             assertEquals(USER_ID, examDto.userId());
             assertEquals(APPLICANT_ID, examDto.applicantId());
-           // assertEquals(TEST_ID, examDto.examParams());
 
             verify(examRepository).save(any(Exam.class));
         }
@@ -174,7 +172,6 @@ public class ExamServiceUnitTests {
             assertEquals(STATUS_OF_EXAM, examDto.examStatus());
             assertEquals(USER_ID, examDto.userId());
             assertEquals(APPLICANT_ID, examDto.applicantId());
-           // assertEquals(TEST_ID, examDto.examParams());
 
             verify(examRepository).save(any(Exam.class));
         }
