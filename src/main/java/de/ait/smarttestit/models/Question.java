@@ -1,16 +1,21 @@
 package de.ait.smarttestit.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -37,15 +42,23 @@ public class Question {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "testType_id", nullable = false)
+    @JsonBackReference
     private TestType testType;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Answer> answers = new HashSet<>();
+    @JsonManagedReference
+    private List<Answer> answers = new ArrayList<>();
 
     public Question(String questionText, Integer level, TestType testType) {
         this.questionText = questionText;
         this.level = level;
         this.testType = testType;
+    }
+
+    public Question(Long id, String questionText, List<Answer> answers) {
+        this.id = id;
+        this.questionText=questionText;
+        this.answers = answers;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package de.ait.smarttestit.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -28,11 +29,8 @@ public class Exam {
     @Column
     private int examScore;
 
-    @NotNull
-    @Column(nullable = false)
     private LocalDateTime examStartTime;
 
-    @Column
     private LocalDateTime examEndTime;
 
     @Min(5)
@@ -47,14 +45,16 @@ public class Exam {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "applicant_id")
+    @JoinColumn(name = "aplicant_id")
+    @JsonBackReference
     private Applicant applicant;
 
     @OneToOne
-    @JoinColumn(name = "examtask_id")
+    @JoinColumn(name = "test_id")
     private ExamTask examTask;
 
     /**
@@ -84,6 +84,12 @@ public class Exam {
         this.examTask = examTask;
     }
 
+    public Exam(int examDuration, ExamStatus examStatus, Applicant applicant, ExamTask examTask) {
+        this.examDuration = examDuration;
+        this.examStatus = examStatus;
+        this.applicant = applicant;
+        this.examTask = examTask;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -12,33 +12,30 @@ import de.ait.smarttestit.services.QuestionService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@Component
 public class AnswerServiceImpl implements AnswerService {
+
     private final AnswersRepository answersRepository;
     private final QuestionService questionService;
 
     @Override
     @Transactional
-    public AnswerDto addAnswer(@NonNull final Long questionId, @NonNull final NewAnswerDto newAnswer) {
+    public AnswerDto addAnswer(@NonNull final Long questionId,
+                               @NonNull final NewAnswerDto newAnswer) {
         Question question = questionService.getByIdOrThrow(questionId);
 
-        if (answersRepository.existsByAnswerTextAndQuestionId(newAnswer.answerText(), questionId)) {
+        if (answersRepository.existsByAnswerTextAndQuestionId(newAnswer.answerText(), question.getId())) {
             throw new RestException(HttpStatus.CONFLICT,
                     "Answer < " + newAnswer + "> already exists");
         }
 
-        Answer answer = new Answer();
-        answer.setAnswerText(newAnswer.answerText());
-        answer.setCorrect(newAnswer.isCorrect());
+        Answer answer = new Answer(newAnswer.answerText(), newAnswer.isCorrect(), question);
         answer = answersRepository.save(answer);
         return AnswerDto.from(answer);
     }
@@ -47,7 +44,7 @@ public class AnswerServiceImpl implements AnswerService {
     public List<AnswerDto> getAll() {
         return answersRepository.findAll().stream()
                 .map(AnswerDto::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -62,20 +59,20 @@ public class AnswerServiceImpl implements AnswerService {
                                   @NonNull final Long answerId,
                                   @NonNull final UpdateAnswerDto updateAnswer) {
 
-        Question question = questionService.getByIdOrThrow(questionId);
-        Answer answer = getIdOrThrow(answerId);
-        answer.setAnswerText(updateAnswer.answerText());
-        answer.setCorrect(updateAnswer.isCorrect());
-        answer = answersRepository.save(answer);
-        return AnswerDto.from(answer);
+        questionService.getByIdOrThrow(questionId);
+        Answer answerToUpdate = getIdOrThrow(answerId);
+        answerToUpdate.setAnswerText(updateAnswer.answerText());
+        answerToUpdate.setCorrect(updateAnswer.isCorrect());
+        answerToUpdate = answersRepository.save(answerToUpdate);
+        return AnswerDto.from(answerToUpdate);
     }
 
     @Override
     public AnswerDto deleteAnswer(@NonNull final Long answerId) {
 
-        Answer answer = getIdOrThrow(answerId);
-        answersRepository.delete(answer);
-        return AnswerDto.from(answer);
+        Answer answerToDelete = getIdOrThrow(answerId);
+        answersRepository.delete(answerToDelete);
+        return AnswerDto.from(answerToDelete);
     }
 
     private Answer getIdOrThrow(Long answerId) {

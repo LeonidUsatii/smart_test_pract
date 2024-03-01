@@ -6,25 +6,22 @@ import de.ait.smarttestit.dto.question.UpdateQuestionDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.Question;
 import de.ait.smarttestit.models.TestType;
-import de.ait.smarttestit.repositories.QuestionsRepository;
+import de.ait.smarttestit.repositories.QuestionRepository;
 import de.ait.smarttestit.services.QuestionService;
 import de.ait.smarttestit.services.TestTypeService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@Component
 public class QuestionServiceImpl implements QuestionService {
 
-    private final QuestionsRepository questionsRepository;
+    private final QuestionRepository questionRepository;
     private final TestTypeService testTypeService;
 
     @Override
@@ -33,32 +30,31 @@ public class QuestionServiceImpl implements QuestionService {
                                    @NonNull final NewQuestionDto newQuestion) {
 
         TestType testType = getTestTypeOrThrow(testTypeId);
-        if (questionsRepository.existsByQuestionTextAndTestTypeId(newQuestion.questionText(), testTypeId)) {
+        if (questionRepository.existsByQuestionTextAndTestTypeId(newQuestion.questionText(), testTypeId)) {
             throw new RestException(HttpStatus.CONFLICT,
                     "Question <" + newQuestion + "> already exists");
         }
-        Question question = new Question();
-                question.setQuestionText(newQuestion.questionText());
-                question.setLevel(newQuestion.level());
-                question.setTestType(testType);
+        Question question = new Question(newQuestion.questionText(), newQuestion.level(), testType);
 
-        var savedQuestion = questionsRepository.save(question);
+        Question savedQuestion = questionRepository.save(question);
         return QuestionDto.from(savedQuestion);
     }
 
     @Override
     public List<QuestionDto> getAll() {
-        return questionsRepository.findAll().stream()
+        return questionRepository.findAll().stream()
                 .map(QuestionDto::from)
-                .collect(Collectors.toList());
+                .toList();
     }
+
     @Override
     public TestType getTestTypeOrThrow(@NonNull final Long testTypeId) {
         return testTypeService.getByIdOrThrow(testTypeId);
     }
+
     @Override
     public Question getByIdOrThrow(@NonNull final Long questionId) {
-        return questionsRepository.findById(questionId)
+        return questionRepository.findById(questionId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                         "Question with id <" + questionId + "> not found"));
     }
@@ -73,7 +69,7 @@ public class QuestionServiceImpl implements QuestionService {
         question.setQuestionText(updateQuestion.questionText());
         question.setLevel(updateQuestion.level());
         question.setTestType(testType);
-        question = questionsRepository.save(question);
+        question = questionRepository.save(question);
         return QuestionDto.from(question);
     }
 
@@ -81,7 +77,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuestionDto deleteQuestion(@NonNull final Long questionId) {
 
         Question question = getByIdOrThrow(questionId);
-        questionsRepository.delete(question);
+        questionRepository.delete(question);
         return QuestionDto.from(question);
     }
 }

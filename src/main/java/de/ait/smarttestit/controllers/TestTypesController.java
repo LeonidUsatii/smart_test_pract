@@ -17,19 +17,23 @@ public class TestTypesController implements TestTypesApi {
 
     private final TestTypeService testTypesService;
 
+
     @Override
     public TestTypeDto addTestType(NewTestTypeDto newTestType) {
 
         return testTypesService.addTestType(newTestType);
     }
+
     @Override
-    public List<TestTypeDto> getAllTests() {
+    public List<TestTypeDto> getAllTestTypes() {
         return testTypesService.getAll();
     }
+
     @Override
     public TestTypeDto updateTestType(Long testTypeId, UpdateTestTypeDto updateTestType) {
         return testTypesService.updateTestType(testTypeId, updateTestType);
     }
+
     @Override
     public TestTypeDto deleteTestType(Long testTypeId) {
         return testTypesService.deleteTestType(testTypeId);

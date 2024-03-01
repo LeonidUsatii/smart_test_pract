@@ -14,24 +14,38 @@ public record TestTypeDto(@Schema(description = "Test type id", example = "1")
                           @Positive
                           Long id,
 
-                          @Schema(description = "Name of the test type", example = "newTestType")
+                          @Schema(description = "Name of the test type", example = "newTestType", required = true)
                           @NotBlank
                           String name,
 
                           @Schema(description = "Test id", example = "3")
                           @Positive
-                          Long testId ){
+                          Long examTaskId) {
 
+    /**
+     * Converts a TestType entity to a TestTypeDto object.
+     *
+     * @param testType The TestType entity to convert.
+     * @return The converted TestTypeDto object.
+     */
     public static TestTypeDto from(TestType testType) {
-        Long testId = (testType.getTest() != null) ? testType.getTest().getId() : null;
+        Long examTaskId = testType.getExamTask() != null ? testType.getExamTask().getId() : null;
         return new TestTypeDto(
                 testType.getId(),
                 testType.getName(),
-                testId
+                examTaskId
         );
     }
-    public static List<TestTypeDto> from(Collection<TestType> tests){
+
+    /**
+     * Converts a collection of TestType entities to a list of TestTypeDto objects.
+     *
+     * @param tests The collection of TestType entities to convert.
+     * @return The list of converted TestTypeDto objects.
+     */
+    public static List<TestTypeDto> from(Collection<TestType> tests) {
         return tests.stream()
-                .map(TestTypeDto::from).collect(Collectors.toList());
+                .map(TestTypeDto::from)
+                .collect(Collectors.toList());
     }
 }

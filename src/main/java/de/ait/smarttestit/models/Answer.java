@@ -1,5 +1,6 @@
 package de.ait.smarttestit.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -31,12 +32,18 @@ public class Answer {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "question_id", nullable = false)
+    @JsonBackReference
     private Question question;
 
     public Answer(String answerText, boolean isCorrect, Question question) {
         this.answerText = answerText;
         this.isCorrect = isCorrect;
         this.question = question;
+    }
+
+    public Answer(Long id,String answerText) {
+        this.id = id;
+        this.answerText = answerText;
     }
 
     @Override

@@ -10,21 +10,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Schema(name = "Answer", description = "Representation of a answer")
-public record AnswerDto (@Positive
-                         @Schema(description = "Answer_ID", example = "1")
-                         Long id,
+public record AnswerDto(@Positive
+                        @Schema(description = "Answer_ID", example = "1")
+                        Long id,
 
-                         @NotBlank
-                         @Schema(description = "Answer", example = "answer1")
-                         String answerText,
+                        @NotBlank
+                        @Schema(description = "Answer", example = "answer1")
+                        String answerText,
 
-                         @NotBlank
-                         @Schema(description = "Is answer correct?", example = "true")
-                         boolean isCorrect,
+                        @Schema(description = "Is answer correct?", example = "true", defaultValue = "false")
+                        boolean isCorrect,
 
-                         @Positive
-                         @Schema(description = "Question_Id", example = "2")
-                         Long questionId){
+                        @Positive
+                        @Schema(description = "Question_Id", example = "2")
+                        Long questionId) {
 
     public static AnswerDto from(Answer answer) {
         return new AnswerDto(
@@ -34,7 +33,7 @@ public record AnswerDto (@Positive
                 answer.getQuestion().getId());
     }
 
-    public static List<AnswerDto> from(Collection<Answer> answers){
+    public static List<AnswerDto> from(Collection<Answer> answers) {
         return answers.stream()
                 .map(AnswerDto::from)
                 .collect(Collectors.toList());

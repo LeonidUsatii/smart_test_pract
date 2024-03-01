@@ -71,7 +71,6 @@ public interface TestTypesApi {
     TestTypeDto updateTestType(@PathVariable("testType_id") Long testTypeId,
                                @RequestBody @Valid UpdateTestTypeDto updateTestType);
 
-
     @Operation(summary = "Receiving all tests", description = "Available all users")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Request processed successfully",
@@ -79,8 +78,8 @@ public interface TestTypesApi {
                             schema = @Schema(implementation = TestTypeDto.class))),
 
     })
-    @GetMapping("/api/tests")
-    List<TestTypeDto> getAllTests();
+    @GetMapping("/api/testTypes")
+    List<TestTypeDto> getAllTestTypes();
 
     @Operation(summary = "Delete TestType", description = "Available to teacher")
     @ApiResponses(value = {

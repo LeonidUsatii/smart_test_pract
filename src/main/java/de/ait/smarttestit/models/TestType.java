@@ -1,16 +1,17 @@
 package de.ait.smarttestit.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -23,20 +24,30 @@ public class TestType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Length(min = 1, max = 100)
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String name;
 
     @OneToMany(mappedBy = "testType", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<Question> questions = new HashSet<>();
+    @JsonManagedReference
+    private List<Question> questions = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "test_id")
-    private ExamTask test;
+    @JoinColumn(name = "examTask_id")
+    @JsonBackReference
+    private ExamTask examTask;
 
     public TestType(String name) {
         this.name = name;
+    }
+
+    public TestType(String name, List<Question> questions) {
+        this.name= name;
+        this.questions = questions;
+    }
+
+    public TestType(List<Question> questions) {
+        this.questions = questions;
     }
 
     @Override
@@ -56,9 +67,9 @@ public class TestType {
     public String toString() {
         return "TestType{" +
                 "id=" + id +
-                ", name='" + name +
+                ", name='" + name + '\'' +
                 ", questions=" + questions +
-                ", testId=" + test.getId() +
+                ", examTaskId=" + examTask.getId() +
                 '}';
     }
 }

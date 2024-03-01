@@ -1,14 +1,14 @@
 package de.ait.smarttestit.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.*;
 
 @Getter
 @Setter
@@ -40,32 +40,31 @@ public class Applicant {
     @Column(nullable = true)
     private String phoneNumber;
 
-    @NotBlank
-    private String hashPassword;
-
     @Column(nullable = false)
     @OneToMany(mappedBy = "applicant")
+    @JsonManagedReference
     private List<Exam> exams = new ArrayList<>();
 
+    @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Token> tokens = new ArrayList<>();
 
     public Applicant(Long id, String firstName, String lastName, String email, String address,
-                     String phoneNumber, String hashPassword) {
+                     String phoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.hashPassword = hashPassword;
     }
 
-    public Applicant(String firstName, String lastName, String email, String address, String phoneNumber, String hashPassword) {
+    public Applicant(String firstName, String lastName, String email, String address, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.hashPassword = hashPassword;
     }
 
     @Override
@@ -90,8 +89,8 @@ public class Applicant {
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", hashPassword='" + hashPassword + '\'' +
                 ", exams=" + exams +
+                ", tokens=" + tokens +
                 '}';
     }
 }

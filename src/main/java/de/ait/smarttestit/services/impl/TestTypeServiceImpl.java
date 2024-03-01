@@ -5,12 +5,11 @@ import de.ait.smarttestit.dto.test_type.TestTypeDto;
 import de.ait.smarttestit.dto.test_type.UpdateTestTypeDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.TestType;
-import de.ait.smarttestit.repositories.TestTypesRepository;
+import de.ait.smarttestit.repositories.TestTypeRepository;
 import de.ait.smarttestit.services.TestTypeService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,35 +17,33 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-@Component
 public class TestTypeServiceImpl implements TestTypeService {
 
-    private final TestTypesRepository testTypesRepository;
+    private final TestTypeRepository testTypeRepository;
 
     @Override
     @Transactional
     public TestTypeDto addTestType(@NonNull final NewTestTypeDto newTestType) {
 
-        if (testTypesRepository.existsByName(newTestType.name())) {
+        if (testTypeRepository.existsByName(newTestType.name())) {
             throw new RestException(HttpStatus.CONFLICT,
                     "TestType <" + newTestType.name() + "> already exists");
         }
-        TestType testType = new TestType();
-        testType.setName(newTestType.name());
+        TestType testType = new TestType(newTestType.name());
 
-        testTypesRepository.save(testType);
+        testTypeRepository.save(testType);
         return TestTypeDto.from(testType);
     }
 
     @Override
     public List<TestTypeDto> getAll() {
-        List<TestType> tests = testTypesRepository.findAll();
+        List<TestType> tests = testTypeRepository.findAll();
         return TestTypeDto.from(tests);
     }
 
     @Override
     public TestType getByIdOrThrow(@NonNull final Long testTypeId) {
-        return testTypesRepository.findById(testTypeId)
+        return testTypeRepository.findById(testTypeId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
                         "TestType with id <" + testTypeId + "> not found"));
     }
@@ -58,7 +55,7 @@ public class TestTypeServiceImpl implements TestTypeService {
 
         testType.setName(updateTestType.name());
 
-        testTypesRepository.save(testType);
+        testType = testTypeRepository.save(testType);
         return TestTypeDto.from(testType);
     }
 
@@ -66,7 +63,7 @@ public class TestTypeServiceImpl implements TestTypeService {
     public TestTypeDto deleteTestType(@NonNull final Long testTypeId) {
         TestType testType = getByIdOrThrow(testTypeId);
 
-        testTypesRepository.delete(testType);
+        testTypeRepository.delete(testType);
         return TestTypeDto.from(testType);
     }
 }

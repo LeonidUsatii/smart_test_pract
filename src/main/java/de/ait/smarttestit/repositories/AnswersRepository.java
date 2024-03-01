@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AnswersRepository extends JpaRepository<Answer, Long> {
 
-    boolean existsByAnswerTextAndQuestionId(String s, Long questionId);
+    boolean existsByAnswerTextAndQuestionId(String answerText, Long questionId);
 }

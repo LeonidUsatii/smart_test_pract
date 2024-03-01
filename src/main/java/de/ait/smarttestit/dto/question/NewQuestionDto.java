@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Positive;
 
 @Schema(name = "NewQuestion", description = "Adding a new question")
 public record NewQuestionDto(@NotBlank
-       @Schema(description = "Question text", example = "What is an interface in Java?")
+                             @Schema(description = "Question text", example = "What is an interface in Java?")
                              String questionText,
 
                              @Positive

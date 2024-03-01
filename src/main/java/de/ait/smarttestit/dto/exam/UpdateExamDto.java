@@ -10,7 +10,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-@Schema(name = "UpdateExamDto " , description = "Adding a update exam")
+@Schema(name = "UpdateExamDto", description = "Adding a update exam")
 public record UpdateExamDto(@Schema(description = "Exam grade", example = "70", required = true)
                             @PositiveOrZero
                             int examScore,

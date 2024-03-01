@@ -1,14 +1,16 @@
 package de.ait.smarttestit.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.HashSet;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -25,10 +27,11 @@ public class ExamTask {
     @Column(nullable = false, length = 100)
     private String examTaskTitle;
 
-    @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TestType> testTypes = new HashSet<>();
+    @OneToMany(mappedBy = "examTask", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<TestType> testTypes = new ArrayList<>();
 
-    @OneToOne(mappedBy = "examTask")
+    @OneToOne
     @JoinColumn(name = "exam_id")
     private Exam exam;
 
@@ -39,6 +42,11 @@ public class ExamTask {
     public ExamTask(Long id, String examTaskTitle) {
         this.id = id;
         this.examTaskTitle = examTaskTitle;
+    }
+
+    public ExamTask(String name, List<TestType> testTypes) {
+        this.examTaskTitle = name;
+        this.testTypes = testTypes;
     }
 
     @Override
@@ -58,10 +66,11 @@ public class ExamTask {
 
     @Override
     public String toString() {
-        return "Test{" +
+        return "ExamTask{" +
                 "id=" + id +
-                ", testTitle='" + examTaskTitle + '\'' +
+                ", examTaskTitle='" + examTaskTitle + '\'' +
                 ", testTypes=" + testTypes +
+                ", examId=" + (exam != null ? exam.getId() : null) +
                 '}';
     }
 }

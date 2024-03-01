@@ -1,5 +1,6 @@
 package de.ait.smarttestit.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -53,6 +54,7 @@ public class User {
 
     @Column(nullable = false)
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Exam> exams = new ArrayList<>();
 
     public User(String firstName,

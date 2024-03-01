@@ -7,8 +7,8 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 @Schema(name = "ExamTaskDto", description = "DTO for exam task details")
-public record ExamTaskDto(@Schema(description = "Unique identifier of the exam task", example = "1", required = true)
-                          @Positive(message = "ID is required")
+public record ExamTaskDto(@Schema(description = "Unique identifier of the exam task", example = "1")
+                          @Positive(message = "ID must be a positive number")
                           Long id,
 
                           @Schema(description = "Title of the test", example = "Math Final Exam", required = true)
@@ -16,8 +16,16 @@ public record ExamTaskDto(@Schema(description = "Unique identifier of the exam t
                           @Size(min = 1, max = 255, message = "Test title must be between 1 and 255 characters")
                           String examTaskTitle) {
 
+    /**
+     * Converts an {@link ExamTask} object to an {@link ExamTaskDto} object.
+     *
+     * @param examTask the exam task to convert
+     * @return the converted exam task DTO
+     */
     public static ExamTaskDto from(ExamTask examTask) {
-
+        if (examTask == null) {
+            return null;
+        }
         return new ExamTaskDto(
                 examTask.getId(),
                 examTask.getExamTaskTitle()

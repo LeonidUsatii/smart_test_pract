@@ -27,10 +27,6 @@ public class NewApplicantDto {
     @Schema(description = "User email", example = "simple@mail.com")
     private String email;
 
-    @NotBlank
-    @Schema(description = "User password", example = "qwerty007!")
-    private String hashPassword;
-
     @Column(nullable = true)
     @Schema(description = "Applicant address", example = "Unter den Linden 5, 10117 Berlin, Germany")
     private String address;
