@@ -50,7 +50,7 @@ public class ExamControllerIntegrationTests {
                     .andExpect(jsonPath("$.examDuration").value("90"))
                     .andExpect(jsonPath("$.examStatus").value("PLANNED"))
                     .andExpect(jsonPath("$.userId").value("1"))
-                    .andExpect(jsonPath("$.applicantId").value(1))
+                    .andExpect(jsonPath("$.applicantId").isEmpty())
                     .andExpect(jsonPath("$.examTaskId").value("2"));
         }
 
