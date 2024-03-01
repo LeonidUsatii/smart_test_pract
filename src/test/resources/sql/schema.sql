@@ -36,6 +36,6 @@ CREATE TABLE IF NOT EXISTS exam (
     applicant_id BIGINT,
     examtask_id BIGINT,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (aplicant_id) REFERENCES applicants(id),
-    FOREIGN KEY (test_id) REFERENCES exam_task(id)
+    FOREIGN KEY (applicant_id) REFERENCES applicants(id),
+    FOREIGN KEY (exam_task_id) REFERENCES exam_task(id)
     );

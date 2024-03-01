@@ -49,12 +49,12 @@ public class Exam {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "aplicant_id")
+    @JoinColumn(name = "applicant_id")
     @JsonBackReference
     private Applicant applicant;
 
     @OneToOne
-    @JoinColumn(name = "test_id")
+    @JoinColumn(name = "examtask_id")
     private ExamTask examTask;
 
     /**
