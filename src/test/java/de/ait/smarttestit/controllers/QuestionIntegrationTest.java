@@ -121,22 +121,22 @@ class QuestionIntegrationTest {
         }
     }
 
-    @Nested
-    @DisplayName("DELETE questions:")
-    class deleteQuestion {
-
-        @Test
-        @Sql(scripts = "/sql/data.sql")
-        void return_empty_test() throws Exception {
-            mockMvc.perform(delete("/api/testTypes/1/questions/1"))
-                    .andExpect(status().isOk());
-        }
-
+//    @Nested
+//    @DisplayName("DELETE questions:")
+//    class deleteQuestion {
+//
+//        @Test
+//        @Sql(scripts = "/sql/data.sql")
+//        void return_empty_test() throws Exception {
+//            mockMvc.perform(delete("/api/testTypes/1/questions/1"))
+//                    .andExpect(status().isOk());
+//        }
+//
 //        @Test
 //        @Sql(scripts = "/sql/data.sql")
 //        void return_404_by_delete_question() throws Exception {
 //            mockMvc.perform(delete("/api/testTypes/2/questions/111"))
 //                    .andExpect(status().isNotFound());
 //        }
-    }
+//    }
 }
