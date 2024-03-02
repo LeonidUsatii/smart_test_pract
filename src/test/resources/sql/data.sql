@@ -54,8 +54,8 @@ INSERT INTO exam (exam_score, exam_start_time, exam_end_time, exam_duration, exa
 VALUES (80, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 70, 'PLANNED', 1, 1, 1),
        (85, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 90, 'PLANNED', 1, 1, 2);
 
-INSERT INTO token (code, expired_date_time, applicant_id, exam_id)
-VALUES ('qwerty', '2023-03-03 10:00:00', 1, 1),
-       ('qwerty!', '2023-03-03 10:00:00', 2, 2);
+-- INSERT INTO token (code, expired_date_time, applicant_id, exam_id)
+-- VALUES ('qwerty', '2023-03-03 10:00:00', 1, 1),
+--        ('qwerty!', '2023-03-03 10:00:00', 2, 2);
 
        
