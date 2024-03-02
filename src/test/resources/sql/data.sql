@@ -38,4 +38,19 @@ values ('answer1',true,1),
        ('answer2',false,6),
        ('answer3',false,6),
        ('answer4',false,6);
+
+INSERT INTO users (first_name, last_name, email, hash_password, user_role, level_of_user)
+VALUES ('Ivan', 'Testov', 'ivan.testov@example.com', 'hashedPassword', 'USER', 1),
+       ('Lidiya', 'Testova', 'lidiya.testova@example.com', 'hashedPassword', 'USER', 2);
+
+INSERT INTO applicants (first_name, last_name, email, address, phone_number)
+VALUES ('John', 'Doe', 'john.doe@example.com', '1234 Main St', '123-456-7890'),
+       ('Jane', 'Doe', 'jane.doe@example.com', '5678 Market St', '098-765-4321');
+
+INSERT INTO exam_task (exam_task_title)
+VALUES ('Final Exam'), ('Arrays'), ('List');
+
+INSERT INTO exam (exam_score, exam_start_time, exam_end_time, exam_duration, exam_status, user_id, applicant_id, examtask_id)
+VALUES (80, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 70, 'PLANNED', 1, 1, 1),
+       (85, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 90, 'PLANNED', 1, 1, 2);
        
