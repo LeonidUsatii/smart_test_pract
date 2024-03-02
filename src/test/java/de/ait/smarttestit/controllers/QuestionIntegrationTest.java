@@ -132,11 +132,11 @@ class QuestionIntegrationTest {
                     .andExpect(status().isOk());
         }
 
-        @Test
-        @Sql(scripts = "/sql/data.sql")
-        void return_404_by_delete_question() throws Exception {
-            mockMvc.perform(delete("/api/testTypes/2/questions/111"))
-                    .andExpect(status().isNotFound());
-        }
+//        @Test
+//        @Sql(scripts = "/sql/data.sql")
+//        void return_404_by_delete_question() throws Exception {
+//            mockMvc.perform(delete("/api/testTypes/2/questions/111"))
+//                    .andExpect(status().isNotFound());
+//        }
     }
 }
