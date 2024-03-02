@@ -10,6 +10,7 @@ import de.ait.smarttestit.services.ApplicantService;
 import de.ait.smarttestit.services.ExamService;
 import de.ait.smarttestit.services.ExamTasksService;
 import de.ait.smarttestit.services.TokenService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -81,5 +82,11 @@ public class TokenServiceImpl implements TokenService {
         applicantRepository.save(applicant);
 
         return ApplicantDto.from(applicant);
+    }
+
+    @Override
+    public Token getByCodeOrThrow(String tokenCode) {
+        return tokenRepository.findByCode(tokenCode)
+                .orElseThrow(() -> new EntityNotFoundException("Token not found with code: " + tokenCode));
     }
 }
