@@ -1,8 +1,9 @@
 spring:
   datasource:
-    url: ${JDBC_DD_SOURCE}
+    url: ${JDBC_DB_SOURCE}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
+tokenExpireDay: 3

@@ -18,7 +18,6 @@ public record AnswerJsonDto(@Positive
                             @Schema(description = "Answer", example = "answer1")
                             String answerText) {
 
-
     /**
      * Converts an Answer object to an AnswerJsonDto object.
      *
@@ -33,7 +32,6 @@ public record AnswerJsonDto(@Positive
                 answer.getId(),
                 answer.getAnswerText());
     }
-
 
     /**
      * Converts a collection of Answer objects to a list of AnswerJsonDto objects.

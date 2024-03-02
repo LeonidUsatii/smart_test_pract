@@ -1,8 +1,6 @@
 package de.ait.smarttestit.services.impl;
 
-import de.ait.smarttestit.dto.applicant.ApplicantDto;
-import de.ait.smarttestit.dto.applicant.NewApplicantDto;
-import de.ait.smarttestit.dto.applicant.UpdateApplicantDto;
+import de.ait.smarttestit.dto.applicant.*;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.Applicant;
 import de.ait.smarttestit.models.Exam;
@@ -10,13 +8,12 @@ import de.ait.smarttestit.repositories.ApplicantRepository;
 import de.ait.smarttestit.services.ApplicantService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static de.ait.smarttestit.dto.applicant.ApplicantDto.from;
 
 @AllArgsConstructor
 @Service
@@ -32,21 +29,9 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     @Override
-    public ApplicantDto addApplicant(@NonNull NewApplicantDto newApplicantDto) {
-        if (applicantRepository.existsByEmail(newApplicantDto.getEmail())) {
-            throw new RestException(HttpStatus.CONFLICT,
-                    "Applicant with email <" + newApplicantDto.getEmail() + "> already exists");
-        }
-        Applicant newApplicant = new Applicant(
-                newApplicantDto.getFirstName(),
-                newApplicantDto.getLastName(),
-                newApplicantDto.getEmail(),
-                newApplicantDto.getAddress(),
-                newApplicantDto.getPhoneNumber()
-        );
-        newApplicant = applicantRepository.save(newApplicant);
-
-        return from(newApplicant);
+    public ApplicantDto addApplicant(NewApplicantTaskDto newApplicantDto) {
+        Applicant applicant = create(newApplicantDto);
+        return ApplicantDto.from(applicant);
     }
 
     @Override
@@ -101,5 +86,36 @@ public class ApplicantServiceImpl implements ApplicantService {
         applicantRepository.save(applicant);
 
         return updatedExams;
+    }
+
+    @Override
+    public Applicant create(@NonNull NewApplicantTaskDto applicantTaskDto) {
+        NewApplicantDto applicantInfo = applicantTaskDto.applicantInfo();
+        if(applicantInfo == null){
+            throw new IllegalArgumentException("Applicant information is null");
+        }
+        if (applicantRepository.existsByEmail(applicantInfo.getEmail())) {
+            throw new RestException(HttpStatus.CONFLICT,
+                    "Applicant with email <" + applicantInfo.getEmail() + "> already exists");
+        }
+        Applicant applicant = new Applicant();
+        applicant.setFirstName(applicantInfo.getFirstName());
+        applicant.setLastName(applicantInfo.getLastName());
+        applicant.setEmail(applicantInfo.getEmail());
+        applicant.setAddress(applicantInfo.getAddress());
+        applicant.setPhoneNumber(applicantInfo.getPhoneNumber());
+
+        return save(applicant);
+    }
+
+    @Override
+    public Applicant save(Applicant applicant) {
+        Long applicantId = applicant.getId();
+        if(applicantId != null && applicantRepository.existsById(applicant.getId()))  {
+            throw new DataIntegrityViolationException("Applicant with ID " + applicant.getId() + " already exists.");
+        }
+        else {
+          return applicantRepository.save(applicant);
+        }
     }
 }

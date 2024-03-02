@@ -49,7 +49,6 @@ public class QuestionServiceTest {
             Long testTypeId = 1L;
             NewQuestionDto newQuestion = new NewQuestionDto("What is your question?", 1);
             TestType testType = new TestType();
-            when(questionService.getTestTypeOrThrow(testTypeId)).thenReturn(testType);
             when(questionRepository.existsByQuestionTextAndTestTypeId(
                     newQuestion.questionText(), testTypeId)).thenReturn(false);
 
@@ -72,14 +71,12 @@ public class QuestionServiceTest {
             Long testTypeId = 1L;
             NewQuestionDto newQuestion = new NewQuestionDto("What is your question?", 1);
             TestType testType = new TestType();
-            when(questionService.getTestTypeOrThrow(testTypeId)).thenReturn(testType);
             when(questionRepository.existsByQuestionTextAndTestTypeId(
                     newQuestion.questionText(), testTypeId)).thenReturn(true);
 
             assertThrows(RestException.class, () -> questionService.addQuestion(testTypeId, newQuestion));
         }
     }
-
     @Nested
     @DisplayName("get all questions")
     class getAllQuestions {

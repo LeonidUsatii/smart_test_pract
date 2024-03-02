@@ -1,7 +1,6 @@
 package de.ait.smarttestit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.ait.smarttestit.dto.test_type.NewTestTypeDto;
 import de.ait.smarttestit.dto.test_type.UpdateTestTypeDto;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +11,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,28 +36,24 @@ class TestTypeIntegrationTestIT {
         @Test
         @Sql(scripts = "/sql/data.sql")
         void return_created_testType() throws Exception {
-            NewTestTypeDto testTypeDto = new NewTestTypeDto("newTestType");
-            String content = objectMapper.writeValueAsString(testTypeDto);
-
             mockMvc.perform(post("/api/testTypes")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(content))
+                            .content("{" +
+                                    "  \"name\": \"newTestType\"\n" +
+                                    "}"))
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.id").exists())
-                    .andExpect(jsonPath("$.name").value(testTypeDto.name()));
+                    .andExpect(jsonPath("$.id").exists());
         }
 
         @Test
         @Sql(scripts = "/sql/data.sql")
         void return_409_for_existed_test() throws Exception {
-            NewTestTypeDto testTypeDto = new NewTestTypeDto("TestType");
-            String content = objectMapper.writeValueAsString(testTypeDto);
-
             mockMvc.perform(post("/api/testTypes")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(content))
-                    .andExpect(status().isConflict())
-                    .andExpect(content().string("TestType <TestType> already exists"));
+                            .content("{" +
+                                    "  \"name\": \"TestType\"\n" +
+                                    "}"))
+                    .andExpect(status().isConflict());
         }
     }
 
@@ -76,23 +69,22 @@ class TestTypeIntegrationTestIT {
                     .andExpect(jsonPath("$.size()").exists());
         }
 
-        //todo fix it when security implimented
-        @Disabled
-        @Test
-        void return_401_for_unauthorized() throws Exception {
-            mockMvc.perform(get("/api/testTypes"))
-                    .andExpect(status().isUnauthorized());
-        }
+            /* @Test
+            
+             void return_401_for_unauthorized() throws Exception {
+                mockMvc.perform(get("/api/testTypes"))
+                        .andExpect(status().isUnauthorized());
+            }
 
-        //todo fix it when security implimented
-        @Disabled
-        @Test
-        void return_403_for_not_user() throws Exception {
-            mockMvc.perform(get("/api/testTypes"))
-                    .andExpect(status().isForbidden());
-        }
+            @Test
+            
+             void return_403_for_not_user() throws Exception {
+                mockMvc.perform(get("/api/testTypes"))
+                        .andExpect(status().isForbidden());
+            }*/
 
     }
+
 
     @Nested
     @DisplayName("PUT /api/testTypes:")

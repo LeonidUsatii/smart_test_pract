@@ -4,10 +4,7 @@ import de.ait.smarttestit.dto.exam.ExamDto;
 import de.ait.smarttestit.dto.exam.NewExamDto;
 import de.ait.smarttestit.dto.exam.UpdateExamDto;
 import de.ait.smarttestit.exceptions.RestException;
-import de.ait.smarttestit.models.Exam;
-import de.ait.smarttestit.models.ExamStatus;
-import de.ait.smarttestit.models.ExamTask;
-import de.ait.smarttestit.models.User;
+import de.ait.smarttestit.models.*;
 import de.ait.smarttestit.repositories.ExamRepository;
 import de.ait.smarttestit.services.ApplicantService;
 import de.ait.smarttestit.services.ExamTasksService;
@@ -15,6 +12,7 @@ import de.ait.smarttestit.services.ExamService;
 import de.ait.smarttestit.services.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -138,5 +136,16 @@ public class ExamServiceImpl implements ExamService {
     public Exam getExamOrThrow(@NonNull final Long examId) {
         return examRepository.findById(examId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "Exam with id <" + examId + "> not found"));
+    }
+
+    @Override
+    public Exam save(Exam exam) {
+        Long examId = exam.getId();
+        if(examId != null && examRepository.existsById(exam.getId()))  {
+             throw new DataIntegrityViolationException("Exam with ID " + exam.getId() + " already exists.");
+         }
+         else {
+            return examRepository.save(exam);
+         }
     }
 }

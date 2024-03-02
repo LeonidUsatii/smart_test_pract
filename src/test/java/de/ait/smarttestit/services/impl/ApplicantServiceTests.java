@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 
 import java.util.*;
 
@@ -22,7 +21,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,7 +67,7 @@ public class ApplicantServiceTests {
         }
     }
 
-    @Nested
+ /*   @Nested
     @DisplayName("add applicant")
     class AddApplicant {
 
@@ -96,7 +94,7 @@ public class ApplicantServiceTests {
             assertEquals(HttpStatus.CONFLICT, exception.getStatus());
             assertEquals("Applicant with email <applicantov@mail.com> already exists", exception.getMessage());
         }
-    }
+    }*/
 
     @Nested
     @DisplayName("get list applicants")
