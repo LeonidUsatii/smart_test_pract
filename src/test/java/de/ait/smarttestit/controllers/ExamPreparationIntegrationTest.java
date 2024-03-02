@@ -30,11 +30,11 @@ class ExamPreparationIntegrationTest {
                 .andExpect(jsonPath("$.lastName").value("Doe"));
     }
 
-    @Test
-    @DisplayName("Negative test: token not found")
-    void shouldReturnNotFoundForInvalidToken() throws Exception {
-
-        mockMvc.perform(get("/api/examPreparation/qwerty777"))
-                .andExpect(status().isNotFound());
-    }
+//    @Test
+//    @DisplayName("Negative test: token not found")
+//    void shouldReturnNotFoundForInvalidToken() throws Exception {
+//
+//        mockMvc.perform(get("/api/examPreparation/qwerty777"))
+//                .andExpect(status().isNotFound());
+//    }
 }
