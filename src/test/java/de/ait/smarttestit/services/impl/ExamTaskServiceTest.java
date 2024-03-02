@@ -2,15 +2,9 @@ package de.ait.smarttestit.services.impl;
 
 import de.ait.smarttestit.dto.exam_task.ExamTaskDto;
 import de.ait.smarttestit.dto.exam_task.UpdateExamTaskDto;
-import de.ait.smarttestit.dto.test_type.NewTestTypeDto;
-import de.ait.smarttestit.dto.test_type.TestTypeDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.ExamTask;
-import de.ait.smarttestit.models.Question;
-import de.ait.smarttestit.models.TestType;
 import de.ait.smarttestit.repositories.ExamTaskRepository;
-import de.ait.smarttestit.repositories.TestTypeRepository;
-import de.ait.smarttestit.services.TestTypeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,11 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
+import org.springframework.dao.DataIntegrityViolationException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -30,33 +23,17 @@ import static org.mockito.Mockito.*;
 @DisplayName("examTask CRUD:")
 public class ExamTaskServiceTest {
 
-   /* private static final Long EXAM_TASK_Id = 1L;
-    private static final Long TEST_TYPE_ID = 1L;
-    private static final Long QUESTION_ID = 1L;
+    private static final Long EXAM_TASK_Id = 1L;
+
     private static final String EXAM_TASK_TITLE = "Java beginner level";
+
     private static final ExamTask EXAM_TASK = new ExamTask(EXAM_TASK_Id, EXAM_TASK_TITLE);
-   // private static final NewTestsParamDto NEW_EXAM_TASK = new NewTestsParamDto(
-    //        EXAM_TASK_TITLE, TEST_TYPE_ID, EXAM_TASK.getQuestionLevel(), EXAM_TASK.getQuestionCount());
-    private static final String NEW_QUESTION_TEXT = "This is a new Question";
-    private static final String TEST_TYPE_TITLE = "Java beginner level";
-    private static final List<Question> QUESTION_SET = new ArrayList<>();
-    private static final TestType TEST_TYPE = new TestType(TEST_TYPE_ID, TEST_TYPE_TITLE, QUESTION_SET, EXAM_TASK);
-   // private static final QuestionDto QUESTION_DTO = new QuestionDto(QUESTION_ID, NEW_QUESTION_TEXT, 5, TEST_TYPE_ID, null);
-    private static final NewTestTypeDto NEW_TEST_TYPE_DTO = new NewTestTypeDto(TEST_TYPE_TITLE);
-    private static final TestTypeDto TEST_TYPE_DTO = new TestTypeDto(1L, TEST_TYPE_TITLE, EXAM_TASK_Id);
 
     @Mock
     private ExamTaskRepository examTaskRepository;
-    @Mock
-    private TestTypeRepository testTypeRepository;
-
-    @Mock
-    private TestTypeService typeService;
 
     @InjectMocks
     private ExamTaskServiceImpl examTasksServices;
-    @InjectMocks
-    private TestTypeServiceImpl testTypeService;
 
     @Nested
     @DisplayName("get examTask or trow")
@@ -113,62 +90,7 @@ public class ExamTaskServiceTest {
         }
     }
 
-    @Nested
-    @DisplayName("add examTask")
-    class AddExamTask {
 
-        @Test
-        void testAddExamTaskPositive() {
-
-            when(examTaskRepository.findByExamTaskTitle(anyString())).thenReturn(Optional.empty());
-            when(examTaskRepository.save(any(ExamTask.class))).thenReturn(EXAM_TASK);
-
-           // ExamTaskDto result = examTasksServices.addExamTask(NEW_EXAM_TASK);
-
-           // assertNotNull(result, "The result should not be null");
-           // assertEquals(NEW_EXAM_TASK.examTitle(), result.examTaskTitle(), "The exam task titles should match");
-
-           // verify(examTaskRepository).findByExamTaskTitle(NEW_EXAM_TASK.examTitle());
-            verify(examTaskRepository).save(any(ExamTask.class));
-        }
-
-        @Test
-        void testAddExamTaskNegative() {
-
-            when(examTaskRepository.findByExamTaskTitle(anyString())).thenReturn(Optional.of(EXAM_TASK));
-
-         //   assertThrows(IllegalArgumentException.class, () -> examTasksServices.addExamTask(NEW_EXAM_TASK), "Exam task title must be unique");
-        }
-    }
-
-    @Nested
-    @DisplayName("get examTask")
-    class GetExam {
-
-        @Test
-        void testGetExamTaskPositive() {
-
-            when(examTaskRepository.findById(EXAM_TASK_Id)).thenReturn(Optional.of(EXAM_TASK));
-
-            ExamTaskDto result = examTasksServices.getExamTask(EXAM_TASK_Id);
-
-            assertNotNull(result);
-            assertEquals(EXAM_TASK.getId(), result.id());
-            assertEquals(EXAM_TASK.getExamTaskTitle(), result.examTaskTitle());
-        }
-
-        @Test
-        void testGetExamTaskNegative() {
-
-            Long examId = 5L;
-
-            RestException exception = assertThrows(RestException.class,
-                    () -> examTasksServices.getExamTask(examId));
-
-            assertThat(exception.getMessage().trim(),
-                    containsString("ExamTask with id <" + examId + "> not found"));
-        }
-    }
 
     @Nested
     @DisplayName("get list examTasks")
@@ -278,82 +200,30 @@ public class ExamTaskServiceTest {
     }
 
     @Nested
-    @DisplayName("add testType to examTask by newTestType")
-    class AddTestTypeToExamTaskByNewTestType {
+    @DisplayName("save examTask")
+    class saveExamTask {
 
         @Test
-        void testAddTestTypeToExamTaskPositive() {
+        void testSaveExamTaskPositive() {
 
-            when(examTaskRepository.findById(EXAM_TASK_Id)).thenReturn(Optional.of(EXAM_TASK));
+            when(examTaskRepository.existsById(any(Long.class))).thenReturn(false);
+            when(examTaskRepository.save(any(ExamTask.class))).thenReturn(EXAM_TASK);
 
-            ExamTask examTask = examTasksServices.getByIdOrThrow(EXAM_TASK_Id);
+            ExamTask savedExamTask = examTasksServices.save(EXAM_TASK);
 
-            when(testTypeRepository.findById(TEST_TYPE_ID)).thenReturn(Optional.of(TEST_TYPE));
-
-            TestType addedTestType = testTypeService.getByIdOrThrow(QUESTION_DTO.id());
-
-            examTask.setTestTypes(new ArrayList<>());
-
-            when(examTaskRepository.findById(1L)).thenReturn(Optional.of(EXAM_TASK));
-
-            when(typeService.addTestType(any(NewTestTypeDto.class))).thenReturn(TEST_TYPE_DTO);
-
-            when(typeService.getByIdOrThrow(TEST_TYPE_DTO.id())).thenReturn(addedTestType);
-
-            List<TestType> updatedTestType = examTasksServices.addTestTypeToExamTask(EXAM_TASK_Id, NEW_TEST_TYPE_DTO);
-
-            assertTrue(updatedTestType.contains(addedTestType));
-
-            verify(examTaskRepository).save(EXAM_TASK);
+            assertNotNull(savedExamTask);
+            assertEquals(EXAM_TASK.getId(), savedExamTask.getId());
+            verify(examTaskRepository).save(any(ExamTask.class));
         }
 
         @Test
-        void testAddTestTypeToExamTaskNegative() {
+        void testSaveExamTaskNegative() {
 
-            when(examTaskRepository.findById(anyLong())).thenThrow(new EntityNotFoundException());
+            when(examTaskRepository.existsById(any(Long.class))).thenReturn(true);
 
-            assertThrows(EntityNotFoundException.class, () ->
-                    examTasksServices.addTestTypeToExamTask(EXAM_TASK_Id, NEW_TEST_TYPE_DTO));
+            assertThrows(DataIntegrityViolationException.class, () -> examTasksServices.save(EXAM_TASK));
+
+            verify(examTaskRepository, never()).save(any(ExamTask.class));
         }
     }
-
-    @Nested
-    @DisplayName("add testType to examTask by testType_id")
-    class AddTestTypeToExamTaskByTestTypeId {
-
-        @Test
-        void testAddTestTypeToExamTaskByTestTypeId_Positive() {
-
-            when(examTaskRepository.findById(EXAM_TASK_Id)).thenReturn(Optional.of(EXAM_TASK));
-
-            when(testTypeRepository.findById(TEST_TYPE_ID)).thenReturn(Optional.of(TEST_TYPE));
-
-            ExamTask examTask = examTasksServices.getByIdOrThrow(EXAM_TASK_Id);
-
-            examTask.setTestTypes(new ArrayList<>());
-
-            TestType addedTestType = testTypeService.getByIdOrThrow(TEST_TYPE_ID);
-
-            when(typeService.getByIdOrThrow(TEST_TYPE_ID)).thenReturn(addedTestType);
-
-          //  List<TestType> updatedTestType = examTasksServices.addTestTypeToExamTask(EXAM_TASK_Id, TEST_TYPE_ID);
-
-           // assertTrue(updatedTestType.contains(addedTestType));
-
-            verify(examTaskRepository, times(1)).save(examTask);
-        }
-
-       @Test
-        void testAddTestTypeToExamTaskByTestTypeId_Negative() {
-
-            Long invalidExamTaskId = 2L;
-            Long testTypeId = 1L;
-
-            when(examTaskRepository.findById(invalidExamTaskId))
-                    .thenThrow(new EntityNotFoundException("Exam task not found"));
-
-          //  assertThrows(EntityNotFoundException.class,
-            //        () -> examTasksServices.addTestTypeToExamTask(invalidExamTaskId, testTypeId));
-        }
-    }*/
 }
