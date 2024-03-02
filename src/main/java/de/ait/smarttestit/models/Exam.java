@@ -27,16 +27,17 @@ public class Exam {
 
     @PositiveOrZero
     @Column
-    private int examScore;
+    private Integer examScore;
 
     private LocalDateTime examStartTime;
 
     private LocalDateTime examEndTime;
 
+
     @Min(5)
     @Max(180)
     @Column(nullable = false)
-    private int examDuration;
+    private Integer examDuration;
 
     @NotNull
     @Column(nullable = false)
@@ -49,12 +50,12 @@ public class Exam {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "aplicant_id")
+    @JoinColumn(name = "applicant_id")
     @JsonBackReference
     private Applicant applicant;
 
     @OneToOne
-    @JoinColumn(name = "test_id")
+    @JoinColumn(name = "examtask_id")
     private ExamTask examTask;
 
     /**
