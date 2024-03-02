@@ -26,17 +26,17 @@ class ExamPreparationIntegrationTest {
     @DisplayName("Positive test: return of information about the applicant")
     void shouldReturnApplicantInfoForValidToken() throws Exception {
 
-//        mockMvc.perform(get("/api/examPreparation/qwerty"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.firstName").value("John"))
-//                .andExpect(jsonPath("$.lastName").value("Doe"));
+        mockMvc.perform(get("/api/examPreparation/qwerty"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("John"))
+                .andExpect(jsonPath("$.lastName").value("Doe"));
     }
 
-//    @Test
-//    @DisplayName("Negative test: token not found")
-//    void shouldReturnNotFoundForInvalidToken() throws Exception {
-//
-//        mockMvc.perform(get("/api/examPreparation/qwerty777"))
-//                .andExpect(status().isNotFound());
-//    }
+    @Test
+    @DisplayName("Negative test: token not found")
+    void shouldReturnNotFoundForInvalidToken() throws Exception {
+
+        mockMvc.perform(get("/api/examPreparation/qwerty777"))
+                .andExpect(status().isNotFound());
+    }
 }
