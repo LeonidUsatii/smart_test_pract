@@ -30,7 +30,7 @@ class ApplicantDtoTest {
     @Test
     @DisplayName("Test conversion from Applicant object with all fields filled")
     void shouldReturnApplicantDtoWithAllFieldsFilledWhenFromIsCalledWithApplicant() {
-        // Given
+
         Applicant applicant = new Applicant();
         applicant.setId(1L);
         applicant.setFirstName("John");
@@ -39,10 +39,8 @@ class ApplicantDtoTest {
         applicant.setAddress("123 Street, City");
         applicant.setPhoneNumber("+12345678");
 
-        // When
         ApplicantDto applicantDto = ApplicantDto.from(applicant);
 
-        // Then
         assertEquals(applicant.getId(), applicantDto.getId());
         assertEquals(applicant.getFirstName(), applicantDto.getFirstName());
         assertEquals(applicant.getLastName(), applicantDto.getLastName());
@@ -54,21 +52,18 @@ class ApplicantDtoTest {
     @Test
     @DisplayName("Field validation of ApplicantDto object")
     void shouldValidateFields() {
-        // Given
+
         ApplicantDto applicantDto = new ApplicantDto(-1L, "", "", "", "", "");
 
-        // Create validator
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        // When
         Set<ConstraintViolation<ApplicantDto>> violations = validator.validate(applicantDto);
 
         Map<String, List<String>> errorMessages = violations.stream()
                 .collect(Collectors.groupingBy(violation -> violation.getPropertyPath().toString(),
                         Collectors.mapping(ConstraintViolation::getMessage, Collectors.toList())));
 
-        // Then
         assertEquals(4, errorMessages.size());
 
         assertTrue(errorMessages.containsKey("id"));

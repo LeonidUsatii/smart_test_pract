@@ -2,7 +2,9 @@ package de.ait.smarttestit.dto.token;
 
 import de.ait.smarttestit.models.Token;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
@@ -19,7 +21,8 @@ public record TokenDto(@Schema(description = "Tokens code", example = "12sdsds23
                        LocalDateTime expiryTime,
 
                        @Schema(description = "Applicant identifications code", example = "1")
-                       @Positive
+                       @NotNull(message = "The id must not be null")
+                       @Positive(message = "The id must be positive")
                        Long applicantId,
 
                        @Schema(description = "Exam identifications code", example = "2")

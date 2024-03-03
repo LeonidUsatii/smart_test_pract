@@ -3,6 +3,7 @@ package de.ait.smarttestit.dto.answer;
 import de.ait.smarttestit.models.Answer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.util.Collection;
@@ -10,13 +11,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Schema(name = "Answer json", description = "Representation of a answer")
-public record AnswerJsonDto(@Positive
-                            @Schema(description = "Answer_ID", example = "1")
-                            Long id,
+public record AnswerJsonDto( @Schema(description = "Answer_ID", example = "1")
+                             @NotNull(message = "The id must not be null")
+                             @Positive(message = "The id must be positive")
+                             Long id,
 
-                            @NotBlank
-                            @Schema(description = "Answer", example = "answer1")
-                            String answerText) {
+                             @NotBlank
+                             @Schema(description = "Answer", example = "answer1")
+                             String answerText) {
 
     /**
      * Converts an Answer object to an AnswerJsonDto object.
