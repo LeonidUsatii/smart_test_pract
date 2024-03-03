@@ -364,6 +364,7 @@ public class ExamServiceUnitTests {
             verify(examsRepository, never()).save(any(Exam.class));
         }
     }
+}
 
     @Nested
     @DisplayName("getExamScore")

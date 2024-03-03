@@ -4,7 +4,6 @@ import de.ait.smarttestit.dto.test_type.TestTypeWithQuestionDto;
 import de.ait.smarttestit.models.ExamTask;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Positive;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -3,6 +3,7 @@ package de.ait.smarttestit.services.impl;
 import de.ait.smarttestit.dto.exam_task.ExamTaskDto;
 import de.ait.smarttestit.dto.exam_task.UpdateExamTaskDto;
 import de.ait.smarttestit.exceptions.RestException;
+import de.ait.smarttestit.models.Exam;
 import de.ait.smarttestit.models.ExamTask;
 import de.ait.smarttestit.repositories.ExamTaskRepository;
 import org.junit.jupiter.api.DisplayName;
