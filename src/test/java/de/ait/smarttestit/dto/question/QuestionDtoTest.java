@@ -85,7 +85,7 @@ class QuestionDtoTest {
                 .collect(Collectors.joining(", "));
         System.out.println("Violation messages: " + violationMessages);
 
-        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("не должно быть пустым")), "There should be a violation for blank question text");
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("The question text must not be blank")), "There should be a violation for blank question text");
 
         System.out.println("Violations: ");
         for (ConstraintViolation<QuestionDto> violation : violations) {
@@ -102,7 +102,7 @@ class QuestionDtoTest {
 
 
         assertFalse(violations.isEmpty(), "Violations should be present for a negative level");
-        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("должно быть больше 0")), "There should be a violation for negative level");
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("The level of the question must be a positive number")), "There should be a violation for negative level");
 
         System.out.println("Violations: ");
         for (ConstraintViolation<QuestionDto> violation : violations) {

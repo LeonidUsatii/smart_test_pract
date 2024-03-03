@@ -17,10 +17,10 @@ public record QuestionDto(@NotNull(message = "The id must not be null")
                           Long id,
 
                           @Schema(description = "Question", example = "What is an interface in Java?")
-                          @NotBlank
+                          @NotBlank(message = "The question text must not be blank")
                           String questionText,
 
-                          @Positive
+                          @Positive(message = "The level of the question must be a positive number")
                           @Schema(description = "Level of question", example = "1")
                           int level,
 
