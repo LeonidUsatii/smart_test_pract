@@ -39,3 +39,14 @@ CREATE TABLE IF NOT EXISTS exam (
     FOREIGN KEY (applicant_id) REFERENCES applicants(id),
     FOREIGN KEY (exam_task_id) REFERENCES exam_task(id)
     );
+
+CREATE TABLE tokens (
+    code VARCHAR(255) NOT NULL,
+    expired_date_time TIMESTAMP NOT NULL,
+    applicant_id BIGINT NOT NULL,
+    exam_id BIGINT,
+    PRIMARY KEY (code),
+    FOREIGN KEY (applicant_id) REFERENCES applicants(id),
+    FOREIGN KEY (exam_id) REFERENCES exam(id)
+);
+
