@@ -1,5 +1,6 @@
 package de.ait.smarttestit.dto.exam;
 
+import de.ait.smarttestit.dto.question.QuestionDto;
 import de.ait.smarttestit.models.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -104,10 +105,15 @@ class ExamDtoTest {
 
         assertTrue(errorMessages.containsKey("id"));
         assertEquals(1, errorMessages.get("id").size());
-        assertEquals("Exam ID must be a positive number", errorMessages.get("id").get(0));
+        assertEquals("The id must be positive", errorMessages.get("id").get(0));
 
         assertTrue(errorMessages.containsKey("examDuration"));
         assertEquals(1, errorMessages.get("examDuration").size());
         assertEquals("Exam duration must be a positive number", errorMessages.get("examDuration").get(0));
+
+        System.out.println("Violations: ");
+        for (ConstraintViolation<ExamDto> violation : violations) {
+            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
+        }
     }
 }

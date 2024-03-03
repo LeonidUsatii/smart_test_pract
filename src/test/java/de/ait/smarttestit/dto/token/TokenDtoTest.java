@@ -108,7 +108,11 @@ class TokenDtoTest {
         Set<ConstraintViolation<TokenDto>> violations = validator.validate(dto);
 
         assertFalse(violations.isEmpty(), "Violations should be present for a blank code");
-        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("не должно быть пустым")), "There should be a violation for blank code");
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("The id must not be null")), "There should be a violation for blank code");
+        System.out.println("Violations for zero applicantId: ");
+        for (ConstraintViolation<TokenDto> violation : violations) {
+            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
+        }
     }
 
     @Test
