@@ -6,7 +6,6 @@ import de.ait.smarttestit.dto.exam.UpdateExamDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.*;
 import de.ait.smarttestit.repositories.ExamRepository;
-import de.ait.smarttestit.services.ApplicantService;
 import de.ait.smarttestit.services.ExamTasksService;
 import de.ait.smarttestit.services.ExamService;
 import de.ait.smarttestit.services.UserService;
@@ -27,7 +26,6 @@ public class ExamServiceImpl implements ExamService {
 
     private final ExamRepository examRepository;
     private final UserService userService;
-    private final ApplicantService applicantService;
     private final ExamTasksService examTasksService;
 
     @Override
@@ -42,52 +40,27 @@ public class ExamServiceImpl implements ExamService {
 
         ExamTask examTask = examTasksService.getByIdOrThrow(newExam.examTaskId());
 
-        if ((newExam.userId() != null) && (newExam.applicantId() != null)) {
-
-            throw new RestException(HttpStatus.BAD_REQUEST, "Both user and applicant are defined");
-        }
-
-        if (newExam.userId() != null) {
-
-            Exam exam = new Exam(
-                    newExam.examScore(),
-                    newExam.examStartTime(),
-                    newExam.examEndTime(),
-                    newExam.examDuration(),
-                    ExamStatus.valueOf(newExam.examStatus()),
-                    userService.getUserOrThrow(newExam.userId()),
-                    null,
-                    examTask
-            );
-
-            Exam savedExam = examRepository.save(exam);
-
-            userService.addExamToUser(newExam.userId(), savedExam);
-
-            return from(savedExam);
-
-        } else if (newExam.applicantId() != null) {
-
-            Exam exam = new Exam(newExam.examScore(),
-                    newExam.examStartTime(),
-                    newExam.examEndTime(),
-                    newExam.examDuration(),
-                    ExamStatus.valueOf(newExam.examStatus()),
-                    null,
-                    applicantService.getApplicantOrThrow(newExam.applicantId()),
-                    examTask);
-
-            Exam savedExam = examRepository.save(exam);
-
-            applicantService.addExamToApplicant(newExam.applicantId(), savedExam);
-
-            return from(savedExam);
-
-        } else {
+        if (newExam.userId() == null)  {
 
             throw new RestException(HttpStatus.BAD_REQUEST, "Neither userId nor applicantId provided");
-
         }
+
+        Exam exam = new Exam(
+                newExam.examScore(),
+                newExam.examStartTime(),
+                newExam.examEndTime(),
+                newExam.examDuration(),
+                ExamStatus.valueOf(newExam.examStatus()),
+                userService.getUserOrThrow(newExam.userId()),
+                null,
+                examTask
+        );
+
+        Exam savedExam = examRepository.save(exam);
+
+        userService.addExamToUser(newExam.userId(), savedExam);
+
+        return from(savedExam);
     }
 
     @Override
