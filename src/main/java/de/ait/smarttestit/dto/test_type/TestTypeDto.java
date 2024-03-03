@@ -3,6 +3,7 @@ package de.ait.smarttestit.dto.test_type;
 import de.ait.smarttestit.models.TestType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.util.Collection;
@@ -11,7 +12,8 @@ import java.util.stream.Collectors;
 
 @Schema(name = "TestType", description = "Representation of a test type")
 public record TestTypeDto(@Schema(description = "Test type id", example = "1")
-                          @Positive
+                          @NotNull(message = "The id must not be null")
+                          @Positive(message = "The id must be positive")
                           Long id,
 
                           @Schema(description = "Name of the test type", example = "newTestType", required = true)

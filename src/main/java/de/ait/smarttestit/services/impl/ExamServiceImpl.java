@@ -2,23 +2,19 @@ package de.ait.smarttestit.services.impl;
 
 import de.ait.smarttestit.dto.exam.ExamDto;
 import de.ait.smarttestit.dto.exam.NewExamDto;
+import de.ait.smarttestit.dto.exam.NewFinishExamDto;
 import de.ait.smarttestit.dto.exam.UpdateExamDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.*;
 import de.ait.smarttestit.repositories.ExamRepository;
-import de.ait.smarttestit.services.ApplicantService;
-import de.ait.smarttestit.services.ExamTasksService;
-import de.ait.smarttestit.services.ExamService;
-import de.ait.smarttestit.services.UserService;
+import de.ait.smarttestit.services.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
-
 import static de.ait.smarttestit.dto.exam.ExamDto.from;
 
 @RequiredArgsConstructor
@@ -27,8 +23,8 @@ public class ExamServiceImpl implements ExamService {
 
     private final ExamRepository examRepository;
     private final UserService userService;
-    private final ApplicantService applicantService;
     private final ExamTasksService examTasksService;
+    private final AnswerService answerService;
 
     @Override
     public ExamDto addExam(@NonNull final NewExamDto newExam) {
@@ -42,54 +38,28 @@ public class ExamServiceImpl implements ExamService {
 
         ExamTask examTask = examTasksService.getByIdOrThrow(newExam.examTaskId());
 
-        if ((newExam.userId() != null) && (newExam.applicantId() != null)) {
-
-            throw new RestException(HttpStatus.BAD_REQUEST, "Both user and applicant are defined");
-        }
-
-        if (newExam.userId() != null) {
-
-            Exam exam = new Exam(
-                    newExam.examScore(),
-                    newExam.examStartTime(),
-                    newExam.examEndTime(),
-                    newExam.examDuration(),
-                    ExamStatus.valueOf(newExam.examStatus()),
-                    userService.getUserOrThrow(newExam.userId()),
-                    null,
-                    examTask
-            );
-
-            Exam savedExam = examRepository.save(exam);
-
-            userService.addExamToUser(newExam.userId(), savedExam);
-
-            return from(savedExam);
-
-        } else if (newExam.applicantId() != null) {
-
-            Exam exam = new Exam(newExam.examScore(),
-                    newExam.examStartTime(),
-                    newExam.examEndTime(),
-                    newExam.examDuration(),
-                    ExamStatus.valueOf(newExam.examStatus()),
-                    null,
-                    applicantService.getApplicantOrThrow(newExam.applicantId()),
-                    examTask);
-
-            Exam savedExam = examRepository.save(exam);
-
-            applicantService.addExamToApplicant(newExam.applicantId(), savedExam);
-
-            return from(savedExam);
-
-        } else {
+        if (newExam.userId() == null)  {
 
             throw new RestException(HttpStatus.BAD_REQUEST, "Neither userId nor applicantId provided");
-
         }
-    }
 
+        Exam exam = new Exam(
+                newExam.examScore(),
+                newExam.examStartTime(),
+                newExam.examEndTime(),
+                newExam.examDuration(),
+                ExamStatus.valueOf(newExam.examStatus()),
+                userService.getUserOrThrow(newExam.userId()),
+                null,
+                examTask
+        );
+
+        Exam savedExam = examRepository.save(exam);
+
+        userService.addExamToUser(newExam.userId(), savedExam);
+
+        return from(savedExam);
+    }
     @Override
     public ExamDto getExam(@NonNull final Long examId) {
 
@@ -147,5 +117,20 @@ public class ExamServiceImpl implements ExamService {
          else {
             return examRepository.save(exam);
          }
+    }
+
+    @Override
+    public int getExamScore(@NonNull NewFinishExamDto newFinishExamDto) {
+
+        int examScore = 0;
+
+        for (Integer answerId : newFinishExamDto.answerIdsList()) {
+            Answer answer = answerService.getByIdOrThrow(answerId.longValue());
+            if (answer.isCorrect()) {
+                examScore ++;
+            }
+        }
+
+        return (examScore * 100) / newFinishExamDto.answerIdsList().size();
     }
 }

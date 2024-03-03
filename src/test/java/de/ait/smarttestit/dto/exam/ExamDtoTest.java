@@ -1,4 +1,5 @@
-import de.ait.smarttestit.dto.exam.ExamDto;
+package de.ait.smarttestit.dto.exam;
+
 import de.ait.smarttestit.models.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -26,7 +27,7 @@ class ExamDtoTest {
     @Test
     @DisplayName("Test conversion from Exam object with all fields filled")
     void shouldReturnExamDtoWithAllFieldsFilledWhenFromIsCalledWithExam() {
-        // Given
+
         Exam exam = new Exam();
         exam.setId(1L);
         exam.setExamScore(85);
@@ -44,10 +45,8 @@ class ExamDtoTest {
         examTask.setId(3L);
         exam.setExamTask(examTask);
 
-        // When
         ExamDto examDto = ExamDto.from(exam);
 
-        // Then
         assertEquals(exam.getId(), examDto.id());
         assertEquals(exam.getExamScore(), examDto.examScore());
         assertEquals(exam.getExamStartTime().toString(), examDto.examStartTime());
@@ -62,7 +61,7 @@ class ExamDtoTest {
     @Test
     @DisplayName("Field validation of ExamDto object")
     void shouldValidateFields() {
-        // Given
+
         ExamDto examDto = new ExamDto(-1L,
                 -1,
                 "",
@@ -73,18 +72,15 @@ class ExamDtoTest {
                 null,
                 -1L);
 
-        // Create validator
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
-        // When
         Set<ConstraintViolation<ExamDto>> violations = validator.validate(examDto);
 
         Map<String, List<String>> errorMessages = violations.stream()
                 .collect(Collectors.groupingBy(violation -> violation.getPropertyPath().toString(),
                         Collectors.mapping(ConstraintViolation::getMessage, Collectors.toList())));
 
-        // Then
         assertEquals(7, errorMessages.size());
 
         assertTrue(errorMessages.containsKey("examTaskId"));
@@ -109,7 +105,7 @@ class ExamDtoTest {
 
         assertTrue(errorMessages.containsKey("id"));
         assertEquals(1, errorMessages.get("id").size());
-        assertEquals("Exam ID must be a positive number", errorMessages.get("id").get(0));
+        assertEquals("The id must be positive", errorMessages.get("id").get(0));
 
         assertTrue(errorMessages.containsKey("examDuration"));
         assertEquals(1, errorMessages.get("examDuration").size());
