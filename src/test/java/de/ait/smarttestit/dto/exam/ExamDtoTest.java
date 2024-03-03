@@ -39,7 +39,7 @@ class ExamDtoTest {
         user.setId(2L);
         exam.setUser(user);
         Applicant applicant = new Applicant();
-        applicant.setId(2L);
+        applicant.setId(null);
         exam.setApplicant(applicant);
         ExamTask examTask = new ExamTask();
         examTask.setId(3L);
