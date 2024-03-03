@@ -110,10 +110,5 @@ class ExamDtoTest {
         assertTrue(errorMessages.containsKey("examDuration"));
         assertEquals(1, errorMessages.get("examDuration").size());
         assertEquals("Exam duration must be a positive number", errorMessages.get("examDuration").get(0));
-
-        System.out.println("Violations: ");
-        for (ConstraintViolation<ExamDto> violation : violations) {
-            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
-        }
     }
 }

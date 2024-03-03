@@ -82,9 +82,5 @@ class ExamTaskDtoTest {
                 "Validation errors for filed examTaskTitle: " + invalTitleFields);
         assertTrue(invalTitleFields.contains("Test title is required"),
                 "Validation errors for filed examTaskTitle: " + invalTitleFields);
-        System.out.println("Violations: ");
-        for (ConstraintViolation<ExamTaskDto> violation : violations) {
-            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
-        }
     }
 }

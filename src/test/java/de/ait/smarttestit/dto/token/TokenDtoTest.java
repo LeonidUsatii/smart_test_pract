@@ -109,10 +109,6 @@ class TokenDtoTest {
 
         assertFalse(violations.isEmpty(), "Violations should be present for a blank code");
         assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("The id must not be null")), "There should be a violation for blank code");
-        System.out.println("Violations for zero applicantId: ");
-        for (ConstraintViolation<TokenDto> violation : violations) {
-            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
-        }
     }
 
     @Test
@@ -133,15 +129,5 @@ class TokenDtoTest {
                 violationsNegative.stream().anyMatch(v -> v.getMessage().contains("The id must be positive")),
                 "There should be a violation message indicating the applicantId must be greater than 0 for negative value"
         );
-
-        System.out.println("Violations for zero applicantId: ");
-        for (ConstraintViolation<TokenDto> violation : violationsZero) {
-            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
-        }
-
-        System.out.println("Violations for negative applicantId: ");
-        for (ConstraintViolation<TokenDto> violation : violationsNegative) {
-            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
-        }
     }
 }

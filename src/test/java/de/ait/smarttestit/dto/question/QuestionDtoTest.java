@@ -86,11 +86,6 @@ class QuestionDtoTest {
         System.out.println("Violation messages: " + violationMessages);
 
         assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("The question text must not be blank")), "There should be a violation for blank question text");
-
-        System.out.println("Violations: ");
-        for (ConstraintViolation<QuestionDto> violation : violations) {
-            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
-        }
     }
 
     @Test
@@ -103,12 +98,6 @@ class QuestionDtoTest {
 
         assertFalse(violations.isEmpty(), "Violations should be present for a negative level");
         assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("The level of the question must be a positive number")), "There should be a violation for negative level");
-
-        System.out.println("Violations: ");
-        for (ConstraintViolation<QuestionDto> violation : violations) {
-            System.out.println(violation.getPropertyPath() + ": " + violation.getMessage());
-        }
-
     }
 
 
