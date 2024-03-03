@@ -49,8 +49,6 @@ INSERT INTO applicants (first_name, last_name, email, address, phone_number)
 VALUES ('John', 'Doe', 'john.doe@example.com', '1234 Main St', '123-456-7890'),
        ('Jane', 'Doe', 'jane.doe@example.com', '5678 Market St', '098-765-4321');
 
--- INSERT INTO exam_task (id, exam_task_title) VALUES (1, 'Final Exam'), (2, 'Arrays'), (3 'List');
-
 INSERT INTO exam (exam_score, exam_start_time, exam_end_time, exam_duration, exam_status, user_id, applicant_id, examtask_id)
 VALUES (80, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 70, 'PLANNED', 1, 1, 1),
        (85, '2023-01-01 10:00:00', '2023-01-01 11:30:00', 90, 'PLANNED', 1, 1, 2);
@@ -59,4 +57,3 @@ INSERT INTO token (code, expired_date_time, applicant_id, exam_id)
 VALUES ('qwerty', '2023-03-03 10:00:00', 1, 1),
        ('qwerty!', '2023-03-03 10:00:00', 2, 2);
 
-       

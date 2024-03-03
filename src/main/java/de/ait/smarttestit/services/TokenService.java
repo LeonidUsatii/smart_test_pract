@@ -4,6 +4,8 @@ import de.ait.smarttestit.dto.applicant.ApplicantDto;
 import de.ait.smarttestit.dto.applicant.NewApplicantTaskDto;
 import de.ait.smarttestit.models.Applicant;
 import de.ait.smarttestit.models.ExamTask;
+import de.ait.smarttestit.models.Token;
+import jakarta.validation.constraints.NotBlank;
 
 public interface TokenService {
 
@@ -41,4 +43,6 @@ public interface TokenService {
      * @return The generated token code.
      */
      String generateApplicantToken(NewApplicantTaskDto applicantTaskDto);
+
+    Token getByCodeOrThrow(@NotBlank final String tokenCode);
 }

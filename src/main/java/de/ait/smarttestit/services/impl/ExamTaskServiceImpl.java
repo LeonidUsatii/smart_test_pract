@@ -37,7 +37,7 @@ public class ExamTaskServiceImpl implements ExamTasksService {
 
     @Override
     public ExamTask save(ExamTask examTask) {
-        Long examTaskId = examTask.getId();;
+        Long examTaskId = examTask.getId();
         if(examTaskId != null && examTaskRepository.existsById(examTask.getId()))  {
             throw new DataIntegrityViolationException("ExamTask with ID " + examTask.getId() + " already exists.");
         }

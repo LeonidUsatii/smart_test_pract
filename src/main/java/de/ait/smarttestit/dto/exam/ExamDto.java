@@ -55,7 +55,7 @@ public record ExamDto(@Schema(description = "Unique identifier of the exam", exa
                 exam.getExamDuration(),
                 exam.getExamStatus().toString(),
                 exam.getUser().getId(),
-                exam.getApplicant().getId(),
+                null,
                 exam.getExamTask().getId());
     }
 }
