@@ -27,7 +27,7 @@ public class Exam {
 
     @PositiveOrZero
     @Column
-    private int examScore;
+    private Integer examScore;
 
     private LocalDateTime examStartTime;
 
@@ -35,8 +35,9 @@ public class Exam {
 
     @Min(5)
     @Max(180)
+    @PositiveOrZero
     @Column(nullable = false)
-    private int examDuration;
+    private Integer examDuration;
 
     @NotNull
     @Column(nullable = false)
@@ -90,6 +91,14 @@ public class Exam {
         this.applicant = applicant;
         this.examTask = examTask;
     }
+
+    public Exam(Long id, LocalDateTime examStartTime, ExamStatus examStatus, ExamTask examTask) {
+        this.id = id;
+        this.examStartTime = examStartTime;
+        this.examStatus = examStatus;
+        this.examTask = examTask;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

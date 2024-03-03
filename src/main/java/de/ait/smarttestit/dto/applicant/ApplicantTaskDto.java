@@ -3,13 +3,15 @@ package de.ait.smarttestit.dto.applicant;
 import de.ait.smarttestit.dto.exam_task.NewTestsParamDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.util.List;
 
 @Schema(name = "ApplicantTaskDto", description = "Representation of a information about applicant," +
         " examTitle for  applicant and examTaskList")
-public record ApplicantTaskDto(@Positive
+public record ApplicantTaskDto(@NotNull(message = "The id must not be null")
+                               @Positive(message = "The id must be positive")
                                @Schema(description = "Applicant_ID", example = "1")
                                Long id,
 

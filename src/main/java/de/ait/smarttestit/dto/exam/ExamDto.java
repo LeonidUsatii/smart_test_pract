@@ -3,12 +3,14 @@ package de.ait.smarttestit.dto.exam;
 import de.ait.smarttestit.models.Exam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 @Schema(name = "Exam", description = "Representation of an exam")
 public record ExamDto(@Schema(description = "Unique identifier of the exam", example = "1")
-                      @Positive(message = "Exam ID must be a positive number")
+                      @NotNull(message = "The id must not be null")
+                      @Positive(message = "The id must be positive")
                       Long id,
 
                       @Schema(description = "Score of the exam", example = "85")

@@ -3,14 +3,27 @@ package de.ait.smarttestit.dto.question;
 import de.ait.smarttestit.models.Answer;
 import de.ait.smarttestit.models.Question;
 import de.ait.smarttestit.models.TestType;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
-
+import java.util.Set;
+import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 class QuestionDtoTest {
+
+    private Validator validator;
+
+    @BeforeEach
+    void setUp() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
 
     @Test
     @DisplayName("Test conversion from null Question object")
@@ -22,7 +35,7 @@ class QuestionDtoTest {
     @Test
     @DisplayName("Test conversion from Question object with all fields filled")
     void shouldReturnQuestionDtoWithAllFieldsFilledWhenFromIsCalledWithQuestion() {
-        // given
+
         TestType testType = new TestType();
         testType.setId(1L);
 
@@ -31,31 +44,61 @@ class QuestionDtoTest {
 
         Question question = new Question(3L, "Question text", 4, testType, List.of(answer));
 
-        // when
         QuestionDto questionDto = QuestionDto.from(question);
 
-        // then
         assertEquals(question.getId(), questionDto.id());
         assertEquals(question.getQuestionText(), questionDto.questionText());
         assertEquals(question.getLevel(), questionDto.level());
         assertEquals(question.getTestType().getId(), questionDto.testTypeId());
-       // assertEquals(question.getAnswers(), questionDto.answers());
     }
 
-  /*  @Test
+    @Test
     @DisplayName("Test conversion from Question object with null TestType and Answers fields")
-    void shouldReturnQuestionDtoWithNullTestTypeAndAnswersWhenFromIsCalledWithQuestion() {
-        // given
-        Question question = new Question(1L, "Question text", 2, null, null);
+    void shouldReturnNullWhenQuestionIsNull() {
 
-        // when
-        QuestionDto questionDto = QuestionDto.from(question);
+        QuestionDto result = QuestionDto.from((Question) null);
 
-        // then
-        assertEquals(question.getId(), questionDto.id());
-        assertEquals(question.getQuestionText(), questionDto.questionText());
-        assertEquals(question.getLevel(), questionDto.level());
-        assertNull(questionDto.testTypeId());
-        assertNull(questionDto.answers());
-    }*/
+        assertNull(result);
+    }
+
+    @Test
+    void shouldBeValidWithCorrectData() {
+
+        QuestionDto dto = new QuestionDto(1L, "What is an interface in Java?", 3, 5L);
+
+        Set<ConstraintViolation<QuestionDto>> violations = validator.validate(dto);
+
+        assertTrue(violations.isEmpty(), "No violations should be present for a valid dto");
+    }
+
+    @Test
+    void shouldBeInvalidWithBlankQuestionText() {
+
+        QuestionDto dto = new QuestionDto(1L, "", 3, 5L);
+
+        Set<ConstraintViolation<QuestionDto>> violations = validator.validate(dto);
+
+        assertFalse(violations.isEmpty(), "Violations should be present for a blank question text");
+
+        String violationMessages = violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining(", "));
+        System.out.println("Violation messages: " + violationMessages);
+
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("The question text must not be blank")), "There should be a violation for blank question text");
+    }
+
+    @Test
+    void shouldBeInvalidWithNegativeLevel() {
+
+        QuestionDto dto = new QuestionDto(1L, "What is an interface in Java?", -1, 5L); // Level is negative, should be positive
+
+        Set<ConstraintViolation<QuestionDto>> violations = validator.validate(dto);
+
+
+        assertFalse(violations.isEmpty(), "Violations should be present for a negative level");
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("The level of the question must be a positive number")), "There should be a violation for negative level");
+    }
+
+
 }

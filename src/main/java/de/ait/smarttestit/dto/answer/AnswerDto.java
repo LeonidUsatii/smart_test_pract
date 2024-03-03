@@ -3,6 +3,7 @@ package de.ait.smarttestit.dto.answer;
 import de.ait.smarttestit.models.Answer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.util.Collection;
@@ -10,8 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Schema(name = "Answer", description = "Representation of a answer")
-public record AnswerDto(@Positive
-                        @Schema(description = "Answer_ID", example = "1")
+public record AnswerDto(@Schema(description = "Answer_ID", example = "1")
+                        @NotNull(message = "The id must not be null")
+                        @Positive(message = "The id must be positive")
                         Long id,
 
                         @NotBlank

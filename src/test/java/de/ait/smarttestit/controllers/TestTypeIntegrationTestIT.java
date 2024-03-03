@@ -70,14 +70,14 @@ class TestTypeIntegrationTestIT {
         }
 
             /* @Test
-            
+
              void return_401_for_unauthorized() throws Exception {
                 mockMvc.perform(get("/api/testTypes"))
                         .andExpect(status().isUnauthorized());
             }
 
             @Test
-            
+
              void return_403_for_not_user() throws Exception {
                 mockMvc.perform(get("/api/testTypes"))
                         .andExpect(status().isForbidden());

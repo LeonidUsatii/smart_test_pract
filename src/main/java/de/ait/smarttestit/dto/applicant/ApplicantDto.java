@@ -3,6 +3,7 @@ package de.ait.smarttestit.dto.applicant;
 import de.ait.smarttestit.models.Applicant;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ApplicantDto extends NewApplicantDto {
 
-    @Positive
+    @NotNull(message = "The id must not be null")
+    @Positive(message = "The id must be positive")
     @Schema(description = "user ID", example = "1")
     private Long id;
 

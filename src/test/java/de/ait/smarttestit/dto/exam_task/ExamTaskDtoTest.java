@@ -1,5 +1,6 @@
 package de.ait.smarttestit.dto.exam_task;
 
+import de.ait.smarttestit.dto.question.QuestionDto;
 import de.ait.smarttestit.models.ExamTask;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -67,7 +68,7 @@ class ExamTaskDtoTest {
         assertTrue(groupedViolations.containsKey("id"));
         List<String> invalIdFields = groupedViolations.get("id");
         assertEquals(1, invalIdFields.size());
-        assertEquals("ID must be a positive number", invalIdFields.get(0));
+        assertEquals("The id must be positive", invalIdFields.get(0));
 
         assertTrue(groupedViolations.containsKey("examTaskTitle"));
         List<String> invalTitleFields = groupedViolations.get("examTaskTitle");
