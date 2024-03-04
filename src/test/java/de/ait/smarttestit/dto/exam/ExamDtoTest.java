@@ -1,6 +1,5 @@
 package de.ait.smarttestit.dto.exam;
 
-import de.ait.smarttestit.dto.question.QuestionDto;
 import de.ait.smarttestit.models.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -8,11 +7,13 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExamDtoTest {

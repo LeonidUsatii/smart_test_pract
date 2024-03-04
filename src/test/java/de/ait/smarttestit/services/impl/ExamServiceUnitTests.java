@@ -2,10 +2,12 @@ package de.ait.smarttestit.services.impl;
 
 import de.ait.smarttestit.dto.exam.ExamDto;
 import de.ait.smarttestit.dto.exam.NewExamDto;
+import de.ait.smarttestit.dto.exam.NewFinishExamDto;
 import de.ait.smarttestit.dto.exam.UpdateExamDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.*;
 import de.ait.smarttestit.repositories.ExamRepository;
+import de.ait.smarttestit.services.AnswerService;
 import de.ait.smarttestit.services.ExamTasksService;
 import de.ait.smarttestit.services.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -80,6 +82,9 @@ public class ExamServiceUnitTests {
 
     @Mock
     private ExamTasksService examTasksService;
+
+    @Mock
+    private AnswerService answerService;
 
     @InjectMocks
     private ExamServiceImpl examsServices;
@@ -359,5 +364,37 @@ public class ExamServiceUnitTests {
             verify(examsRepository, never()).save(any(Exam.class));
         }
     }
-}
 
+    @Nested
+    @DisplayName("getExamScore")
+    class getExamScore {
+
+        @Test
+        void getExamScorePositive() {
+
+            NewFinishExamDto newFinishExamDto = new NewFinishExamDto(List.of(1, 2, 3), 1L);
+
+            when(answerService.getByIdOrThrow(1L)).thenReturn(new Answer("Answer_1", true, new Question()));
+            when(answerService.getByIdOrThrow(2L)).thenReturn(new Answer("Answer_2", true, new Question()));
+            when(answerService.getByIdOrThrow(3L)).thenReturn(new Answer("Answer_3", true, new Question()));
+
+            int score = examsServices.getExamScore(newFinishExamDto);
+
+            assertEquals(100, score);
+        }
+
+        @Test
+        void getExamScoreNegative() {
+
+            NewFinishExamDto newFinishExamDto = new NewFinishExamDto(List.of(1, 2, 3), 1L);
+
+            when(answerService.getByIdOrThrow(1L)).thenReturn(new Answer("Answer_1", false, new Question()));
+            when(answerService.getByIdOrThrow(2L)).thenReturn(new Answer("Answer_2", false, new Question()));
+            when(answerService.getByIdOrThrow(3L)).thenReturn(new Answer("Answer_3", false, new Question()));
+
+            int score = examsServices.getExamScore(newFinishExamDto);
+
+            assertEquals(0, score);
+        }
+    }
+}

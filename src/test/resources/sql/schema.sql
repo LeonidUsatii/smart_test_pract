@@ -48,5 +48,5 @@ CREATE TABLE tokens (
     PRIMARY KEY (code),
     FOREIGN KEY (applicant_id) REFERENCES applicants(id),
     FOREIGN KEY (exam_id) REFERENCES exam(id)
-);
+    );
 

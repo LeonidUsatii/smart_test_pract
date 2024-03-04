@@ -2,13 +2,12 @@ package de.ait.smarttestit.services.impl;
 
 import de.ait.smarttestit.dto.exam.ExamDto;
 import de.ait.smarttestit.dto.exam.NewExamDto;
+import de.ait.smarttestit.dto.exam.NewFinishExamDto;
 import de.ait.smarttestit.dto.exam.UpdateExamDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.*;
 import de.ait.smarttestit.repositories.ExamRepository;
-import de.ait.smarttestit.services.ExamTasksService;
-import de.ait.smarttestit.services.ExamService;
-import de.ait.smarttestit.services.UserService;
+import de.ait.smarttestit.services.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +26,7 @@ public class ExamServiceImpl implements ExamService {
     private final ExamRepository examRepository;
     private final UserService userService;
     private final ExamTasksService examTasksService;
+    private final AnswerService answerService;
 
     @Override
     public ExamDto addExam(@NonNull final NewExamDto newExam) {
@@ -120,5 +120,20 @@ public class ExamServiceImpl implements ExamService {
          else {
             return examRepository.save(exam);
          }
+    }
+
+    @Override
+    public int getExamScore(@NonNull NewFinishExamDto newFinishExamDto) {
+
+        int examScore = 0;
+
+        for (Integer answerId : newFinishExamDto.answerIdsList()) {
+            Answer answer = answerService.getByIdOrThrow(answerId.longValue());
+            if (answer.isCorrect()) {
+                examScore ++;
+            }
+        }
+
+        return (examScore * 100) / newFinishExamDto.answerIdsList().size();
     }
 }

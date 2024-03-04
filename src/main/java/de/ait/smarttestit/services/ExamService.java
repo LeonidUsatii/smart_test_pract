@@ -2,6 +2,7 @@ package de.ait.smarttestit.services;
 
 import de.ait.smarttestit.dto.exam.ExamDto;
 import de.ait.smarttestit.dto.exam.NewExamDto;
+import de.ait.smarttestit.dto.exam.NewFinishExamDto;
 import de.ait.smarttestit.dto.exam.UpdateExamDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.Exam;
@@ -67,4 +68,6 @@ public interface ExamService {
      * @return A  {@link Exam} object.
      */
     Exam save(Exam exam);
+
+    int getExamScore(@NonNull final NewFinishExamDto newFinishExamDto);
 }
