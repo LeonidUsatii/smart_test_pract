@@ -16,3 +16,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
+mail:
+  host: smtp.test.com
+  port: 587
+  username: test@example.com
+  password: testpassword
+  protocol: smtp
+  properties.mail.smtp:
+    auth: true
+    starttls.enable: true
+  debug: true
