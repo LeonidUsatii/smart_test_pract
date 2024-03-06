@@ -6,10 +6,12 @@ import de.ait.smarttestit.dto.applicant.UpdateApplicantDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.Applicant;
 import de.ait.smarttestit.models.Exam;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.NonNull;
 
 import java.util.List;
 
+@Hidden
 public interface ApplicantService {
 
     /**
@@ -56,7 +58,7 @@ public interface ApplicantService {
     /**
      * Retrieves applicant by ID.
      *
-     * @param applicantId     The ID of the applicant.
+     * @param applicantId The ID of the applicant.
      * @return A  {@link ApplicantDto} object.
      */
     ApplicantDto getApplicant(@NonNull final Long applicantId);
@@ -64,8 +66,8 @@ public interface ApplicantService {
     /**
      * Creates an exam for the applicant by ID.
      *
-     * @param applicantId     The ID of the applicant.
-     * @param exam     The exam.
+     * @param applicantId The ID of the applicant.
+     * @param exam        The exam.
      * @return A  {@link Exam} object.
      */
     List<Exam> addExamToApplicant(@NonNull final Long applicantId, @NonNull final Exam exam);
@@ -73,7 +75,7 @@ public interface ApplicantService {
     /**
      * Creating an applicant based on the provided data.
      *
-     * @param applicantTaskDto     The applicant information.
+     * @param applicantTaskDto The applicant information.
      * @return A  {@link Applicant} object.
      */
     Applicant create(@NonNull final NewApplicantTaskDto applicantTaskDto);
@@ -81,7 +83,7 @@ public interface ApplicantService {
     /**
      * Saving applicant data.
      *
-     * @param applicant     The applicant information.
+     * @param applicant The applicant information.
      * @return A  {@link Applicant} object.
      */
     Applicant save(Applicant applicant);

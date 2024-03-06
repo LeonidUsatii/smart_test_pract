@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@Tags(value = @Tag(name = "Applicant"))
+@Tags(@Tag(name = "Applicant"))
 @Schema(name = "Applicant", description = "Applicant")
 public interface ApplicantsApi {
 
@@ -28,14 +28,6 @@ public interface ApplicantsApi {
                     description = "An applicant already exists",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "Admin unauthorized",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = StandardResponseDto.class))),
-            @ApiResponse(responseCode = "403",
-                    description = "Forbidden, only admin available",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = StandardResponseDto.class)))
 
     })
     @ResponseStatus(HttpStatus.CREATED)

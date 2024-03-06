@@ -6,10 +6,12 @@ import de.ait.smarttestit.dto.answer.UpdateAnswerDto;
 import de.ait.smarttestit.dto.question.QuestionDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.Answer;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.NonNull;
 
 import java.util.List;
 
+@Hidden
 public interface AnswerService {
 
     /**

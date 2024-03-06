@@ -31,6 +31,10 @@ public interface TokensApi {
             @ApiResponse(responseCode = "403",
                     description = "Forbidden, only admin available",
                     content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = StandardResponseDto.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "The request was made incorrectly",
+                    content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = StandardResponseDto.class)))
     })
     @ResponseStatus(HttpStatus.CREATED)

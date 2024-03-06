@@ -50,12 +50,12 @@ public record ExamDto(@Schema(description = "Unique identifier of the exam", exa
         return new ExamDto(
                 exam.getId(),
                 exam.getExamScore(),
-                exam.getExamStartTime().toString(),
-                exam.getExamEndTime().toString(),
+                exam.getExamStartTime() == null ? null : exam.getExamStartTime().toString(),
+                exam.getExamEndTime() == null ? null : exam.getExamEndTime().toString(),
                 exam.getExamDuration(),
                 exam.getExamStatus().toString(),
-                exam.getUser().getId(),
-                null,
+                exam.getUser() == null ? null : exam.getUser().getId(),
+                exam.getApplicant() == null ? null : exam.getApplicant().getId(),
                 exam.getExamTask().getId());
     }
 }

@@ -2,8 +2,12 @@ package de.ait.smarttestit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ait.smarttestit.dto.answer.UpdateAnswerDto;
-import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -70,7 +73,7 @@ public class AnswerIntegrationTest {
         @Test
         @Sql(scripts = "/sql/data.sql")
         public void return_list_of_answers() throws Exception {
-            mockMvc.perform(get("/api/answers"))
+            mockMvc.perform(get("/api/questions/answers"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$", hasSize(24)));
         }
@@ -80,7 +83,7 @@ public class AnswerIntegrationTest {
         @Test
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void return_401_for_unauthorized() throws Exception {
-            mockMvc.perform(get("/api/answers", 4))
+            mockMvc.perform(get("/api/questions/answers", 4))
                     .andExpect(status().isUnauthorized());
         }
 
@@ -89,20 +92,20 @@ public class AnswerIntegrationTest {
         @Test
         @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
         public void return_403_for_not_admin() throws Exception {
-            mockMvc.perform(get("/api/answers", 4))
+            mockMvc.perform(get("/api/questions/answers", 4))
                     .andExpect(status().isForbidden());
         }
     }
 
     @Nested
-    @DisplayName("PUT /api/answers/{answer_id}:")
+    @DisplayName("PUT /api/questions/answers/{answer_id}:")
     public class updateAnswer {
 
         @Test
         @Sql(scripts = "/sql/data.sql")
         public void return_updated_answer() throws Exception {
 
-            UpdateAnswerDto updatedAnswer = new UpdateAnswerDto("answer10",true);
+            UpdateAnswerDto updatedAnswer = new UpdateAnswerDto("answer10", true);
             String updatedJson = objectMapper.writeValueAsString(updatedAnswer);
             mockMvc.perform(put("/api/questions/1/answers/1")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -113,7 +116,7 @@ public class AnswerIntegrationTest {
         @Test
         @Sql(scripts = "/sql/data.sql")
         public void return_400_for_bad_format_type() throws Exception {
-            UpdateAnswerDto updatedAnswer = new UpdateAnswerDto("",false);
+            UpdateAnswerDto updatedAnswer = new UpdateAnswerDto("", false);
             String updatedJson = objectMapper.writeValueAsString(updatedAnswer);
             mockMvc.perform(put("/api/questions/1/answers/1")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -129,15 +132,15 @@ public class AnswerIntegrationTest {
         @Test
         @Sql(scripts = "/sql/data.sql")
         public void return_empty_of_answers() throws Exception {
-                mockMvc.perform(delete("/api/questions/1/answers/1"))
-                        .andExpect(status().isOk());
+            mockMvc.perform(delete("/api/questions/1/answers/1"))
+                    .andExpect(status().isOk());
         }
 
         @Test
         @Sql(scripts = "/sql/data.sql")
         public void return_404_by_delete_answer() throws Exception {
-                mockMvc.perform(delete("/api/questions/1/answers/111"))
-                        .andExpect(status().isNotFound());
+            mockMvc.perform(delete("/api/questions/1/answers/111"))
+                    .andExpect(status().isNotFound());
         }
     }
 }

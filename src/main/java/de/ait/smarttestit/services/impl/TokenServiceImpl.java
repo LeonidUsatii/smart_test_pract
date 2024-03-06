@@ -37,7 +37,9 @@ public class TokenServiceImpl implements TokenService {
     public String generateApplicantToken(Long examId, Applicant applicant) {
 
         Exam exam = examService.getExamOrThrow(examId);
-
+        if (exam == null) {
+            return "";
+        }
         String generatedToken = UUID.randomUUID().toString();
         LocalDateTime expireTime = LocalDateTime.now().plusDays(tokenExpireDay);
         Token token = new Token(generatedToken, expireTime, applicant,exam);
@@ -49,16 +51,24 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public String generateApplicantToken(NewApplicantTaskDto applicantTaskDto)  {
 
-        Applicant applicant = applicantService.create(applicantTaskDto);
-        ExamTask examTask = examTasksService.examTaskForExam(applicantTaskDto);
-        examTasksService.save(examTask);
-        Exam exam = new Exam(applicantTaskDto.examDuration(), ExamStatus.PLANNED, applicant, examTask);
-        exam = examService.save(exam);
-        return generateApplicantToken(exam.getId(), applicant);
+        if (applicantTaskDto.applicantInfo() == null) {
+            throw new IllegalArgumentException("Applicant information is null");
+        }
+    Applicant applicant = applicantService.create(applicantTaskDto);
+    ExamTask examTask = examTasksService.examTaskForExam(applicantTaskDto);
+    examTasksService.save(examTask);
+    Exam exam = new Exam(applicantTaskDto.examDuration(), ExamStatus.PLANNED, applicant, examTask);
+    exam = examService.save(exam);
+
+    return generateApplicantToken(exam.getId(), applicant);
     }
 
     @Override
     public void saveTokenCode(String codeValue, Applicant applicant, ExamTask examTask) {
+
+        if (applicant == null) {
+            throw new IllegalArgumentException("Applicant must not be null");
+        }
         Token token = new Token();
         token.setCode(codeValue);
         token.setApplicant(applicant);
@@ -69,6 +79,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     @Transactional
     public ApplicantDto tokenCheck(String tokenCode) {
+
         Token token = tokenRepository
                 .findByCodeAndExpiredDateTimeAfter(tokenCode, LocalDateTime.now())
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND,
@@ -86,6 +97,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Token getByCodeOrThrow(String tokenCode) {
+
         return tokenRepository.findByCode(tokenCode)
                 .orElseThrow(() -> new EntityNotFoundException("Token not found with code: " + tokenCode));
     }

@@ -6,10 +6,12 @@ import de.ait.smarttestit.dto.exam.NewFinishExamDto;
 import de.ait.smarttestit.dto.exam.UpdateExamDto;
 import de.ait.smarttestit.exceptions.RestException;
 import de.ait.smarttestit.models.Exam;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.NonNull;
 
 import java.util.List;
 
+@Hidden
 public interface ExamService {
 
     /**

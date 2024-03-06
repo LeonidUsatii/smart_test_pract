@@ -61,6 +61,12 @@ public class Question {
         this.answers = answers;
     }
 
+    public Question(long id, String questionText, int questionLevel) {
+        this.id = id;
+        this.level = questionLevel;
+        this.questionText = questionText;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

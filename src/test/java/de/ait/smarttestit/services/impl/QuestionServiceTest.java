@@ -1,5 +1,7 @@
 package de.ait.smarttestit.services.impl;
 
+import de.ait.smarttestit.dto.applicant.NewApplicantTaskDto;
+import de.ait.smarttestit.dto.exam_task.NewTestsParamDto;
 import de.ait.smarttestit.dto.question.NewQuestionDto;
 import de.ait.smarttestit.dto.question.QuestionDto;
 import de.ait.smarttestit.dto.question.UpdateQuestionDto;
@@ -18,13 +20,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 @ExtendWith(MockitoExtension.class)
 @Transactional
@@ -77,6 +78,7 @@ public class QuestionServiceTest {
             assertThrows(RestException.class, () -> questionService.addQuestion(testTypeId, newQuestion));
         }
     }
+
     @Nested
     @DisplayName("get all questions")
     class getAllQuestions {
@@ -109,6 +111,7 @@ public class QuestionServiceTest {
     class getById {
         @Test
         void testGetByIdOrThrow_returnsQuestion_whenIdExists() {
+
             Question question = new Question();
             question.setId(1L);
             when(questionRepository.findById(anyLong())).thenReturn(Optional.of(question));
@@ -121,6 +124,7 @@ public class QuestionServiceTest {
 
         @Test
         void testGetByIdOrThrow_throwsRestException_whenIdDoesNotExist() {
+
             long questionId = 1L;
             when(questionRepository.findById(questionId)).thenReturn(Optional.empty());
 
@@ -217,6 +221,125 @@ public class QuestionServiceTest {
             assertThrows(RestException.class, () -> questionService.deleteQuestion(questionId));
 
             verify(questionRepository, never()).delete(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("Create test type for exam")
+    class createTestTypeForExam {
+
+        @Test
+        void createTestTypeForExam_PositiveTest() {
+
+            Long testTypeId = 1L;
+            int questionLevel = 2;
+            int questionCount = 2;
+            TestType testType = new TestType(String.valueOf(testTypeId));
+
+            List<Question> questions = Arrays.asList(
+                    new Question(1L, "Question 1", questionLevel, testType, null),
+                    new Question(2L, "Question 2", questionLevel, testType, null)
+            );
+            when(questionService.getListQuestionsForTestType(testTypeId, questionLevel, questionCount))
+                    .thenReturn(questions);
+
+            TestType result = questionService.createTestTypeForExam(testTypeId, questionLevel, questionCount);
+
+            Collections.sort(questions, Comparator.comparing(Question::getId));
+            Collections.sort(result.getQuestions(), Comparator.comparing(Question::getId));
+
+            assertEquals(questions, result.getQuestions());
+        }
+
+        @Test
+        void createTestTypeForExam_NegativeTest() {
+
+            Long testTypeId = 1L;
+            int questionLevel = 2;
+            int questionCount = 3;
+
+            when(questionService.getListQuestionsForTestType(testTypeId, questionLevel, questionCount))
+                    .thenReturn(null);
+            assertThrows(NullPointerException.class, () -> questionService.createTestTypeForExam(testTypeId, questionLevel, questionCount));
+        }
+    }
+
+    @Nested
+    @DisplayName("Create list of test types for exam")
+    class createListTestType {
+
+        @Test
+        void testCreateTestTypesForExam_PositiveTest() {
+            NewApplicantTaskDto applicantTaskDto = mock(NewApplicantTaskDto.class);
+
+            NewTestsParamDto testParam1 = new NewTestsParamDto(1L, 2, 5);
+            NewTestsParamDto testParam2 = new NewTestsParamDto(2L, 3, 7);
+
+            when(applicantTaskDto.examTaskDtoList()).thenReturn(Arrays.asList(testParam1, testParam2));
+            List<TestType> result = questionService.createTestTypesForExam(applicantTaskDto);
+
+            assertFalse(result.isEmpty());
+        }
+
+        @Test
+        void createTestTypesForExam_NegativeTest() {
+
+            NewApplicantTaskDto applicantTaskDto = new NewApplicantTaskDto(null, 0, null, null);
+            try {
+                Objects.requireNonNull(applicantTaskDto.examTitle(), "Exam title must not be null");
+                Objects.requireNonNull(applicantTaskDto.examTaskDtoList(), "Exam task DTO list must not be null");
+                Objects.requireNonNull(applicantTaskDto.applicantInfo(), "Applicant info must not be null");
+
+                questionService.createTestTypesForExam(applicantTaskDto);
+                fail("Expected NullPointerException was not thrown");
+            } catch (NullPointerException ignored) {
+            } catch (IllegalArgumentException e) {
+                fail("Unexpected IllegalArgumentException was thrown");
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("Getting a list of question on a specific test type")
+    class getListQuestionsForTestType {
+
+        @Test
+        void getListQuestionsForTestType_PositiveTest() {
+            openMocks(this);
+
+            long testTypeId = 1L;
+            int questionLevel = 2;
+            int questionCount = 5;
+
+            List<Question> mockQuestions = new ArrayList<>();
+            mockQuestions.add(new Question(1L, "Question 1", 1));
+            mockQuestions.add(new Question(2L, "Question 2", 2));
+            mockQuestions.add(new Question(3L, "Question 3", 2));
+            mockQuestions.add(new Question(4L, "Question 4", 3));
+            mockQuestions.add(new Question(5L, "Question 5", 2));
+
+            when(questionRepository.findAllByTestTypeIdAndLevel(testTypeId, questionLevel))
+                    .thenReturn(mockQuestions);
+
+            List<Question> result = questionService
+                    .getListQuestionsForTestType(testTypeId, questionLevel, questionCount);
+
+            assertFalse(result.isEmpty());
+            assertEquals(questionCount, result.size());
+        }
+
+        @Test
+        void testGetListQuestionsForTestTypeWhenNoQuestionsFound () {
+
+            Long testTypeId = 1L;
+            int questionLevel = 2;
+            int questionCount = 5;
+
+            List<Question> result = questionService
+                    .getListQuestionsForTestType(testTypeId, questionLevel, questionCount);
+
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
         }
     }
 }
